@@ -1,0 +1,38 @@
+{
+  "name": "Test - Whisper STT Node",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "test-whisper",
+        "options": {}
+      },
+      "name": "Test Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [100, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.groq.com/openai/v1/audio/transcriptions",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Authorization", "value": "=Bearer {{$env.GROQ_API_KEY}}" }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Call Whisper API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [320, 300]
+    }
+  ],
+  "connections": {
+    "Test Trigger": {
+      "main": [[{ "node": "Call Whisper API", "type": "main", "index": 0 }]]
+    }
+  }
+}

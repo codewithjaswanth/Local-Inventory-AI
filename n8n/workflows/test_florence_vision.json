@@ -1,0 +1,38 @@
+{
+  "name": "Test - Florence-2 Vision Node",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "test-florence",
+        "options": {}
+      },
+      "name": "Test Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [100, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{$env.FLORENCE_VISION_ENDPOINT}}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Authorization", "value": "=Bearer {{$env.HUGGINGFACE_API_KEY}}" }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Call Florence-2 Vision",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [320, 300]
+    }
+  ],
+  "connections": {
+    "Test Trigger": {
+      "main": [[{ "node": "Call Florence-2 Vision", "type": "main", "index": 0 }]]
+    }
+  }
+}
