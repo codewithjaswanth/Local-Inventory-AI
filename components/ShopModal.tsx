@@ -175,7 +175,7 @@ export const ShopModal: React.FC<ShopModalProps> = ({ shop, onClose }) => {
 
             <button
               onClick={() => {
-                alert(`Navigating to ${shop.name} at ${shop.address}`);
+                window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(shop.name + ' ' + shop.address)}`, '_blank');
               }}
               className="px-6 py-2.5 rounded-xl font-semibold bg-emerald-500 hover:bg-emerald-600 text-white shadow-lg shadow-emerald-500/25 text-sm transition-all flex items-center space-x-2"
             >

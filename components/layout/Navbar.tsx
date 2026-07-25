@@ -2,10 +2,14 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, Search, Menu, X } from 'lucide-react';
+import { Sparkles, Search, Menu, X, LogIn, LogOut, User, Store } from 'lucide-react';
 import { ThemeToggle } from '../ui/ThemeToggle';
 import { Button } from '../ui/Button';
-import { NAV_LINKS, APP_CONFIG } from '@/constants';
+import { APP_CONFIG } from '@/constants';
+import { useAuth } from '@/hooks/useAuth';
+import { RoleBasedNavigation } from '../auth/RoleBasedNavigation';
+import { UserRoleBadge } from '../auth/UserRoleBadge';
+import { LogoutModal } from '../ui/LogoutModal';
 
 interface NavbarProps {
   onOpenSearch?: () => void;
@@ -14,6 +18,8 @@ interface NavbarProps {
 export const Navbar: React.FC<NavbarProps> = ({ onOpenSearch }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const { user, profile, role, signOut } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -50,17 +56,10 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenSearch }) => {
           </a>
 
           {/* Desktop Nav Links */}
-          <nav aria-label="Main Navigation" className="hidden md:flex items-center space-x-1 lg:space-x-2 bg-slate-100/60 dark:bg-slate-800/60 p-1.5 rounded-full border border-slate-200/60 dark:border-slate-700/60 text-sm font-medium text-slate-600 dark:text-slate-300">
-            {NAV_LINKS.map((link) => (
-              <a
-                key={link.name}
-                href={link.href}
-                className="px-3.5 py-1.5 rounded-full hover:text-slate-900 dark:hover:text-white hover:bg-white dark:hover:bg-slate-700 transition-all duration-200 text-xs sm:text-sm font-semibold"
-              >
-                {link.name}
-              </a>
-            ))}
-          </nav>
+          <RoleBasedNavigation
+            className="hidden md:flex items-center space-x-1 lg:space-x-2 bg-slate-100/60 dark:bg-slate-800/60 p-1.5 rounded-full border border-slate-200/60 dark:border-slate-700/60 text-sm font-medium text-slate-600 dark:text-slate-300"
+            linkClassName="px-3.5 py-1.5 rounded-full hover:text-slate-900 dark:hover:text-white hover:bg-white dark:hover:bg-slate-700 transition-all duration-200 text-xs sm:text-sm font-semibold"
+          />
 
           {/* Right Action Buttons */}
           <div className="hidden md:flex items-center space-x-3">
@@ -80,9 +79,38 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenSearch }) => {
               </button>
             )}
 
-            <Button onClick={() => alert('Sign In dialog opens here!')} variant="secondary" size="sm">
-              Sign In
-            </Button>
+            {user ? (
+              <div className="flex items-center space-x-2.5">
+                <UserRoleBadge role={role} />
+                <a
+                  href={role === 'shopkeeper' ? '/dashboard' : role === 'admin' ? '/admin' : '/profile'}
+                  className="flex items-center space-x-1.5 px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 text-xs font-bold hover:border-emerald-500/40 transition-all"
+                >
+                  <User className="w-3.5 h-3.5 text-emerald-400" />
+                  <span>{profile?.name || 'Account'}</span>
+                </a>
+                <button
+                  onClick={() => setShowLogoutModal(true)}
+                  className="p-2 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-rose-500/10 hover:text-rose-500 text-slate-600 dark:text-slate-300 transition-colors"
+                  title="Sign Out"
+                >
+                  <LogOut className="w-4 h-4" />
+                </button>
+              </div>
+            ) : (
+              <div className="flex items-center space-x-2">
+                <a href="/login">
+                  <Button variant="secondary" size="sm" leftIcon={<LogIn className="w-3.5 h-3.5" />}>
+                    Sign In
+                  </Button>
+                </a>
+                <a href="/signup">
+                  <Button variant="primary" size="sm">
+                    Register
+                  </Button>
+                </a>
+              </div>
+            )}
           </div>
 
           {/* Mobile Actions */}
@@ -122,33 +150,61 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenSearch }) => {
             className="md:hidden bg-white dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800 overflow-hidden shadow-xl"
           >
             <div className="px-4 pt-3 pb-6 space-y-3">
-              {NAV_LINKS.map((link) => (
-                <a
-                  key={link.name}
-                  href={link.href}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="block px-4 py-2.5 rounded-xl font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-brand-600 transition-colors text-sm"
-                >
-                  {link.name}
-                </a>
-              ))}
+              <RoleBasedNavigation
+                className="space-y-1"
+                linkClassName="block px-4 py-2.5 rounded-xl font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-brand-600 transition-colors text-sm"
+                onLinkClick={() => setMobileMenuOpen(false)}
+              />
               <div className="pt-3 border-t border-slate-100 dark:border-slate-800 flex flex-col space-y-2">
-                <Button
-                  onClick={() => {
-                    setMobileMenuOpen(false);
-                    alert('Sign In clicked');
-                  }}
-                  variant="primary"
-                  size="md"
-                  className="w-full"
-                >
-                  Sign In / Register
-                </Button>
+                {user ? (
+                  <>
+                    <a
+                      href={role === 'shopkeeper' ? '/dashboard' : '/profile'}
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="block text-center py-2.5 rounded-xl font-bold text-sm bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
+                    >
+                      {profile?.name || 'My Profile'}
+                    </a>
+                    <Button
+                      onClick={() => {
+                        setMobileMenuOpen(false);
+                        setShowLogoutModal(true);
+                      }}
+                      variant="outline"
+                      size="md"
+                      className="w-full"
+                    >
+                      Sign Out
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <a href="/login" onClick={() => setMobileMenuOpen(false)}>
+                      <Button variant="secondary" size="md" className="w-full">
+                        Sign In
+                      </Button>
+                    </a>
+                    <a href="/signup" onClick={() => setMobileMenuOpen(false)}>
+                      <Button variant="primary" size="md" className="w-full">
+                        Register Account
+                      </Button>
+                    </a>
+                  </>
+                )}
               </div>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
+
+      <LogoutModal
+        isOpen={showLogoutModal}
+        onClose={() => setShowLogoutModal(false)}
+        onConfirm={async () => {
+          setShowLogoutModal(false);
+          await signOut();
+        }}
+      />
     </header>
   );
 };

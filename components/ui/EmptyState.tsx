@@ -1,40 +1,45 @@
 'use client';
 
 import React from 'react';
-import { Search, AlertCircle } from 'lucide-react';
-import { Button } from './Button';
+import { LucideIcon } from 'lucide-react';
+import { AnimatedButton } from './AnimatedButton';
 
-export interface EmptyStateProps {
-  title?: string;
-  description?: string;
-  icon?: React.ReactNode;
+interface EmptyStateProps {
+  icon?: LucideIcon;
+  title: string;
+  description: string;
+  action?: React.ReactNode;
   actionLabel?: string;
   onAction?: () => void;
 }
 
 export const EmptyState: React.FC<EmptyStateProps> = ({
-  title = 'No items found',
-  description = 'Try searching with different keywords or clearing your active filters.',
-  icon,
+  icon: Icon,
+  title,
+  description,
+  action,
   actionLabel,
   onAction,
 }) => {
   return (
-    <div
-      role="status"
-      aria-label={title}
-      className="bg-white dark:bg-slate-900 rounded-3xl p-12 text-center border border-slate-200 dark:border-slate-800 space-y-4 max-w-md mx-auto my-6"
-    >
-      <div className="w-16 h-16 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 flex items-center justify-center mx-auto">
-        {icon || <Search className="w-8 h-8 text-emerald-500" />}
+    <div className="bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 rounded-3xl p-8 sm:p-12 text-center space-y-4 max-w-lg mx-auto">
+      {Icon && (
+        <div className="w-14 h-14 rounded-2xl bg-slate-800/80 border border-slate-700/60 text-emerald-400 flex items-center justify-center mx-auto shadow-lg">
+          <Icon className="w-7 h-7" />
+        </div>
+      )}
+      <div className="space-y-1">
+        <h3 className="text-lg font-extrabold text-white">{title}</h3>
+        <p className="text-xs text-slate-400 max-w-xs mx-auto leading-relaxed">{description}</p>
       </div>
-      <h3 className="text-xl font-bold text-slate-900 dark:text-white">{title}</h3>
-      <p className="text-slate-500 dark:text-slate-400 text-xs sm:text-sm">{description}</p>
-      {actionLabel && onAction && (
+
+      {action && <div className="pt-2">{action}</div>}
+
+      {!action && actionLabel && onAction && (
         <div className="pt-2">
-          <Button onClick={onAction} variant="primary" size="sm">
+          <AnimatedButton onClick={onAction} variant="primary" size="sm">
             {actionLabel}
-          </Button>
+          </AnimatedButton>
         </div>
       )}
     </div>

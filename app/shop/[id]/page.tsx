@@ -36,17 +36,22 @@ export default function ShopDetailsPage({ params }: PageProps) {
 
   const relatedProducts = SEARCH_PRODUCTS.filter((p) => p.shopId !== shop.id).slice(0, 4);
 
+  const [notice, setNotice] = useState<string | null>(null);
+
   const handleCallStore = () => {
-    alert(`Calling ${shop.name} at ${shop.phone}...`);
+    window.location.href = `tel:${shop.phone}`;
   };
 
   const handleGetDirections = () => {
-    alert(`Opening directions to ${shop.address}...`);
+    window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(shop.name + ' ' + shop.address)}`, '_blank');
   };
 
   const handleShareShop = () => {
-    navigator.clipboard?.writeText(window.location.href);
-    alert('Shop link copied to clipboard!');
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(window.location.href);
+    }
+    setNotice('Shop link copied to clipboard!');
+    setTimeout(() => setNotice(null), 3000);
   };
 
   const handleAddReview = (e: React.FormEvent) => {
@@ -66,7 +71,8 @@ export default function ShopDetailsPage({ params }: PageProps) {
 
     setReviewsList([newRev, ...reviewsList]);
     setNewReviewComment('');
-    alert('Thank you for confirming freshness! Your review was submitted.');
+    setNotice('Thank you for confirming freshness! Your review was submitted.');
+    setTimeout(() => setNotice(null), 3000);
   };
 
   const filteredItems = activeCategoryFilter === 'All'
@@ -215,7 +221,10 @@ export default function ShopDetailsPage({ params }: PageProps) {
                 key={item.id}
                 item={item}
                 shopName={shop.name}
-                onReserve={() => alert(`Reserving ${item.name} at ${shop.name}`)}
+                onReserve={() => {
+                  setNotice(`Reserved 1 ${item.name} at ${shop.name}!`);
+                  setTimeout(() => setNotice(null), 3000);
+                }}
               />
             ))}
           </div>

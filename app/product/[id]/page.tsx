@@ -45,7 +45,6 @@ export default function ProductDetailsPage({ params }: PageProps) {
 
   const handleReserve = () => {
     setReserved(true);
-    alert(`Reserved 1 ${product.name} at ${product.shopName}! Pickup ready in 15 mins.`);
   };
 
   return (

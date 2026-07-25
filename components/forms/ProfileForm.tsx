@@ -17,6 +17,8 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({ user, onSave }) => {
   const [address, setAddress] = useState(user.address);
   const [preferredRadius, setPreferredRadius] = useState(user.preferredRadius);
 
+  const [success, setSuccess] = useState(false);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const updated = {
@@ -28,11 +30,17 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({ user, onSave }) => {
       preferredRadius,
     };
     onSave?.(updated);
-    alert('Profile preferences updated successfully!');
+    setSuccess(true);
+    setTimeout(() => setSuccess(false), 3000);
   };
 
   return (
     <form onSubmit={handleSubmit} className="bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-3xl border border-slate-200 dark:border-slate-800 space-y-6 shadow-xs">
+      {success && (
+        <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-600 dark:text-emerald-400 text-xs font-semibold">
+          Profile preferences updated successfully!
+        </div>
+      )}
       <div className="flex items-center space-x-4 border-b border-slate-100 dark:border-slate-800 pb-6">
         <img src={user.avatar} alt={user.name} className="w-16 h-16 rounded-full object-cover border-2 border-emerald-500" />
         <div>

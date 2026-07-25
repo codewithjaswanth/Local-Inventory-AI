@@ -28,7 +28,7 @@ export const Footer: React.FC = () => {
               <span className="text-xs font-bold text-slate-300 uppercase tracking-wider">
                 Subscribe to Local Freshness Alerts
               </span>
-              <form onSubmit={(e) => { e.preventDefault(); alert('Subscribed to alerts!'); }} className="flex items-center space-x-2 max-w-sm">
+              <form onSubmit={(e) => { e.preventDefault(); (e.target as HTMLFormElement).reset(); }} className="flex items-center space-x-2 max-w-sm">
                 <input
                   type="email"
                   required

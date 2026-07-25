@@ -6,9 +6,18 @@ import { Footer } from '@/components/layout/Footer';
 import { useAuth } from '@/hooks/useAuth';
 import { shopService } from '@/services/shop.service';
 import { Store, MapPin, Phone, Clock, User, Sparkles, Navigation, CheckCircle2, AlertCircle } from 'lucide-react';
+import { RoleGuard } from '@/components/auth/RoleGuard';
 import { Button } from '@/components/ui/Button';
 
 export default function ShopCreatePage() {
+  return (
+    <RoleGuard allowedRoles={['shopkeeper', 'admin']}>
+      <ShopCreatePageContent />
+    </RoleGuard>
+  );
+}
+
+function ShopCreatePageContent() {
   const { user, profile, isLoading: isAuthLoading } = useAuth();
   const [shopName, setShopName] = useState('');
   const [ownerName, setOwnerName] = useState('');

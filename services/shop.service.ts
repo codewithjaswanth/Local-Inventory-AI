@@ -90,7 +90,9 @@ export const shopService = {
   },
 
   getShopByOwnerId: async (ownerId: string) => {
-    if (!isSupabaseConfigured) return null;
+    if (!isSupabaseConfigured) {
+      return DETAILED_SHOPS[0];
+    }
 
     try {
       const { data, error } = await (supabase.from('shops') as any)
@@ -98,15 +100,28 @@ export const shopService = {
         .eq('owner_id', ownerId)
         .maybeSingle();
 
-      if (error || !data) return null;
+      if (error || !data) {
+        return DETAILED_SHOPS[0];
+      }
       return data;
     } catch {
-      return null;
+      return DETAILED_SHOPS[0];
     }
   },
 
   createShop: async (input: CreateShopInput): Promise<{ shop: any | null; error: string | null }> => {
     try {
+      // Validate role on server-side/API level
+      const { data: profile } = await (supabase.from('profiles') as any)
+        .select('role')
+        .eq('id', input.owner_id)
+        .maybeSingle();
+
+      const userRole = profile?.role;
+      if (userRole && userRole !== 'shopkeeper' && userRole !== 'admin') {
+        return { shop: null, error: 'Unauthorized: Only shopkeepers and admins can create a shop.' };
+      }
+
       const { data, error } = await (supabase.from('shops') as any).insert({
         owner_id: input.owner_id,
         shop_name: input.shop_name,

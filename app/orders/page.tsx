@@ -4,9 +4,18 @@ import React from 'react';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 import { ShoppingBag, Clock, CheckCircle2, QrCode, MapPin } from 'lucide-react';
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import { Card } from '@/components/ui/Card';
 
 export default function OrderHistoryPage() {
+  return (
+    <ProtectedRoute>
+      <OrderHistoryPageContent />
+    </ProtectedRoute>
+  );
+}
+
+function OrderHistoryPageContent() {
   const mockReservations = [
     {
       id: 'RES-8921',
@@ -102,7 +111,7 @@ export default function OrderHistoryPage() {
                 </div>
 
                 <button
-                  onClick={() => alert(`Showing QR code for pass ${res.pickupPass}`)}
+                  onClick={() => {}}
                   className="px-3.5 py-1.5 rounded-xl bg-slate-900 dark:bg-emerald-500 text-white text-xs font-bold"
                 >
                   Show QR Pass

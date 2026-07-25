@@ -31,14 +31,17 @@ export const InventoryUpdateForm: React.FC<InventoryUpdateFormProps> = ({ onSucc
     }, 1200);
   };
 
+  const [statusBanner, setStatusBanner] = useState<string | null>(null);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!productName || !price) return;
-    alert(`Successfully published ${productName} ($${price}) to live inventory!`);
+    setStatusBanner(`Successfully published ${productName} ($${price}) to live inventory!`);
     setProductName('');
     setPrice('');
     setQuantity('');
     setVoiceMemoText('');
+    setTimeout(() => setStatusBanner(null), 3500);
     onSuccess?.();
   };
 
@@ -75,7 +78,8 @@ export const InventoryUpdateForm: React.FC<InventoryUpdateFormProps> = ({ onSucc
             setProductName('Vine Tomatoes 50kg');
             setPrice('2.49');
             setQuantity('50');
-            alert('Photo analyzed by AI Vision! Form pre-filled.');
+            setStatusBanner('Photo analyzed by AI Vision! Form pre-filled.');
+            setTimeout(() => setStatusBanner(null), 3500);
           }}
           className="p-3 rounded-2xl bg-slate-800 border border-slate-700 hover:border-emerald-500 text-slate-200 flex flex-col items-center justify-center gap-1.5 transition-all"
         >
