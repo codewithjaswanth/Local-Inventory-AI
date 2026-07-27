@@ -42,6 +42,7 @@ export default function AdminDashboardPage() {
 }
 
 function AdminDashboardPageContent() {
+  console.log('[PAGE] Rendering Admin Dashboard');
   const { profile } = useAuth();
   const [activeTab, setActiveTab] = useState<'dashboard' | 'shops' | 'inventory' | 'ai-logs'>('dashboard');
   const [searchTerm, setSearchTerm] = useState('');

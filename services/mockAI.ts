@@ -28,7 +28,7 @@ export const mockAiService = {
 
   extractInventory: async (transcript: string, products: string[]): Promise<ExtractedInventoryItem[]> => {
     const items = await groqService.extractStructuredInventory(transcript, products);
-    return items.map((item, idx) => ({
+    return items.map((item: any, idx: number) => ({
       id: `ext-${idx + 1}`,
       name: item.name,
       category: item.category,

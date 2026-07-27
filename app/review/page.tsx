@@ -6,8 +6,18 @@ import { AI_REVIEW_QUEUE, AiReviewItem } from '@/data/shopPortalData';
 import { CheckSquare, ChevronRight, ShieldCheck } from 'lucide-react';
 import { SectionHeader } from '@/components/ui/SectionHeader';
 import { AIInsightCard } from '@/components/ui/AIInsightCard';
+import { RoleGuard } from '@/components/auth/RoleGuard';
 
 export default function AiReviewPage() {
+  return (
+    <RoleGuard allowedRoles={['shopkeeper', 'admin']}>
+      <AiReviewPageContent />
+    </RoleGuard>
+  );
+}
+
+function AiReviewPageContent() {
+  console.log('[PAGE] Rendering AI Review Page');
   const [queue, setQueue] = useState<AiReviewItem[]>(AI_REVIEW_QUEUE);
 
   const handleApprove = (id: string) => {

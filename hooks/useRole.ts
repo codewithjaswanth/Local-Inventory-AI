@@ -1,7 +1,7 @@
 'use client';
 
 import { useAuth } from './useAuth';
-import { UserRole } from '@/services/auth.service';
+import { UserRole, normalizeRole } from '@/services/auth.service';
 
 export interface UseRoleReturn {
   role: UserRole | null;
@@ -14,7 +14,8 @@ export interface UseRoleReturn {
 export function useRole(): UseRoleReturn {
   const { user, profile, role, isLoading } = useAuth();
 
-  const activeRole: UserRole | null = (profile?.role || role || (user?.user_metadata?.role as UserRole)) ?? null;
+  const rawRole = profile?.role || role || user?.user_metadata?.role;
+  const activeRole: UserRole | null = user || profile ? normalizeRole(rawRole) : null;
 
   return {
     role: activeRole,

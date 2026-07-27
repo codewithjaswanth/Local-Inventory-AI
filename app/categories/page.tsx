@@ -5,6 +5,7 @@ import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 import { CategoryCard } from '@/components/cards/CategoryCard';
 import { POPULAR_CATEGORIES } from '@/data/mockData';
+import { Category } from '@/types';
 import { Grid, Sparkles } from 'lucide-react';
 
 export default function CategoriesPage() {
@@ -32,7 +33,7 @@ export default function CategoriesPage() {
             <CategoryCard
               key={category.id}
               category={category}
-              onSelect={(cat) => {
+              onSelect={(cat: Category) => {
                 window.location.href = `/search?category=${encodeURIComponent(cat.name)}`;
               }}
             />

@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 
 interface ProtectedRouteProps {
@@ -8,26 +9,24 @@ interface ProtectedRouteProps {
 }
 
 export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
+  const router = useRouter();
   const { user, isLoading: isAuthLoading } = useAuth();
   const [mounted, setMounted] = useState(false);
-  const [timedOut, setTimedOut] = useState(false);
 
   useEffect(() => {
     setMounted(true);
-    const timer = setTimeout(() => {
-      setTimedOut(true);
-    }, 1500);
-    return () => clearTimeout(timer);
   }, []);
 
-  const isLoading = !mounted || (isAuthLoading && !timedOut);
+  const isLoading = !mounted || isAuthLoading;
 
   useEffect(() => {
-    if (!isLoading && !user) {
+    if (!mounted || isLoading) return;
+
+    if (!user) {
       console.warn('[ProtectedRoute] Unauthenticated access attempt. Redirecting to /login');
-      window.location.href = '/login';
+      router.replace('/login');
     }
-  }, [user, isLoading]);
+  }, [mounted, isLoading, user, router]);
 
   if (isLoading) {
     return (

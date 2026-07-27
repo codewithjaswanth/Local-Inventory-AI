@@ -47,6 +47,7 @@ export default function ShopManagementDashboard() {
 }
 
 function ShopManagementDashboardContent() {
+  console.log('[PAGE] Rendering Dashboard');
   const { user, profile, isLoading: isAuthLoading } = useAuth();
   const [reviewQueue, setReviewQueue] = useState<AiReviewItem[]>(AI_REVIEW_QUEUE);
   const [notifications, setNotifications] = useState(PORTAL_NOTIFICATIONS);
@@ -56,8 +57,10 @@ function ShopManagementDashboardContent() {
   useEffect(() => {
     async function verifyShopRegistered() {
       if (!isAuthLoading && user) {
+        console.log('[PAGE] Verifying shop registration for user:', user.id);
         const shop = await shopService.getShopByOwnerId(user.id);
         if (!shop) {
+          console.warn('[PAGE] No shop found for shopkeeper. Redirecting to /shop/create');
           window.location.href = '/shop/create';
         }
       }

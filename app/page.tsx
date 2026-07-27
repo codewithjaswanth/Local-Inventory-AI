@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import dynamic from 'next/dynamic';
 import { Toast, ToastMessage } from '@/components/ui/Toast';
 import { FloatingSearchButton } from '@/components/ui/FloatingSearchButton';
-import { Navbar } from '@/components/Navbar';
+import { Navbar } from '@/components/layout/Navbar';
 import { Hero } from '@/components/Hero';
 import { PopularCategories } from '@/components/PopularCategories';
 import { NearbyShops } from '@/components/NearbyShops';
@@ -38,6 +38,7 @@ const SearchModal = dynamic(() => import('@/components/SearchModal').then((m) =>
 });
 
 export default function Home() {
+  console.log('[PAGE] Rendering Home Page');
   const [selectedShop, setSelectedShop] = useState<Shop | null>(null);
   const [isSearchOpen, setIsSearchOpen] = useState<boolean>(false);
 

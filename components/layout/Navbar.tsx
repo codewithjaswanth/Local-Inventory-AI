@@ -9,7 +9,6 @@ import { APP_CONFIG } from '@/constants';
 import { useAuth } from '@/hooks/useAuth';
 import { RoleBasedNavigation } from '../auth/RoleBasedNavigation';
 import { UserRoleBadge } from '../auth/UserRoleBadge';
-import { LogoutModal } from '../ui/LogoutModal';
 
 interface NavbarProps {
   onOpenSearch?: () => void;
@@ -18,7 +17,6 @@ interface NavbarProps {
 export const Navbar: React.FC<NavbarProps> = ({ onOpenSearch }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [showLogoutModal, setShowLogoutModal] = useState(false);
   const { user, profile, role, signOut } = useAuth();
 
   useEffect(() => {
@@ -90,7 +88,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenSearch }) => {
                   <span>{profile?.name || 'Account'}</span>
                 </a>
                 <button
-                  onClick={() => setShowLogoutModal(true)}
+                  onClick={() => signOut()}
                   className="p-2 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-rose-500/10 hover:text-rose-500 text-slate-600 dark:text-slate-300 transition-colors"
                   title="Sign Out"
                 >
@@ -168,7 +166,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenSearch }) => {
                     <Button
                       onClick={() => {
                         setMobileMenuOpen(false);
-                        setShowLogoutModal(true);
+                        signOut();
                       }}
                       variant="outline"
                       size="md"
@@ -196,15 +194,6 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenSearch }) => {
           </motion.div>
         )}
       </AnimatePresence>
-
-      <LogoutModal
-        isOpen={showLogoutModal}
-        onClose={() => setShowLogoutModal(false)}
-        onConfirm={async () => {
-          setShowLogoutModal(false);
-          await signOut();
-        }}
-      />
     </header>
   );
 };

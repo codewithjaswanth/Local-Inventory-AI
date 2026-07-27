@@ -3,9 +3,18 @@
 import React, { useState } from 'react';
 import { ShopPortalSidebar } from '@/components/dashboard/ShopPortalSidebar';
 import { BarChart3, TrendingUp, Search, Eye, Users, ChevronRight } from 'lucide-react';
+import { RoleGuard } from '@/components/auth/RoleGuard';
 import { StatCard } from '@/components/cards/StatCard';
 
 export default function AnalyticsPage() {
+  return (
+    <RoleGuard allowedRoles={['shopkeeper', 'admin']}>
+      <AnalyticsPageContent />
+    </RoleGuard>
+  );
+}
+
+function AnalyticsPageContent() {
   const [timeframe, setTimeframe] = useState<'7d' | '30d' | '90d'>('7d');
 
   return (

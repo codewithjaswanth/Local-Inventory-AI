@@ -2,8 +2,9 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
-import { authService, AuthProfile, UserRole } from '@/services/auth.service';
-import { LogoutModal } from '@/components/ui/LogoutModal';
+import { authService, AuthProfile, UserRole, normalizeRole } from '@/services/auth.service';
+import { ConfirmLogoutDialog } from '@/components/ui/ConfirmLogoutDialog';
+import { Toast } from '@/components/ui/Toast';
 
 interface AuthContextType {
   user: any | null;
@@ -43,39 +44,40 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [isSigningOut, setIsSigningOut] = useState<boolean>(false);
 
   useEffect(() => {
-    console.log('[AuthContext] App mounted. Starting authentication initialization...');
+    console.log('[BOOT] App started');
+    console.log('[AUTH] Initializing session');
 
-    // Safety timeout guarantee: Ensure isLoading becomes false within 2 seconds
+    // Safety timeout guarantee: Ensure isLoading becomes false within 2000ms
     const safetyTimeout = setTimeout(() => {
-      console.warn('[AuthContext] Safety timeout triggered (2000ms). Forcing isLoading = false.');
+      console.warn('[AUTH] Safety timeout triggered (2000ms). Forcing isLoading = false.');
       setIsLoading(false);
     }, 2000);
 
     const checkSession = async () => {
       try {
-        console.log('[AuthContext] Session loaded: Querying current user session...');
+        console.log('[AUTH] checkSession Started');
+        console.log('[AUTH] Fetching user and profile...');
         const { user: currentUser, profile: currentProfile } = await authService.getCurrentUser();
 
         if (currentUser && currentProfile) {
-          console.log('[AuthContext] User loaded:', currentUser.email);
-          console.log('[AuthContext] Profile loaded:', currentProfile.name);
-          console.log('[AuthContext] Role determined:', currentProfile.role);
+          console.log('[AUTH] Session loaded:', currentUser.email);
+          console.log('[AUTH] Role fetched:', currentProfile.role);
           setUser(currentUser);
           setProfile(currentProfile);
           setRole(currentProfile.role);
         } else {
-          console.log('[AuthContext] Session loaded: No active user session found.');
+          console.log('[AUTH] Session loaded: No active user session found.');
           setUser(null);
           setProfile(null);
           setRole(null);
         }
       } catch (err) {
-        console.error('[AuthContext] Error during session check:', err);
+        console.error('[AUTH] Failed: Error during session check:', err);
         setUser(null);
         setProfile(null);
         setRole(null);
       } finally {
-        console.log('[AuthContext] Loading finished. Setting isLoading = false.');
+        console.log('[AUTH] checkSession Completed. Setting isLoading = false.');
         clearTimeout(safetyTimeout);
         setIsLoading(false);
       }
@@ -85,12 +87,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     // Supabase Auth State Change Listener
     const { data: authListener } = supabase.auth.onAuthStateChange(async (event, session) => {
-      console.log('[AuthContext] Auth state change event:', event);
+      console.log('[AUTH] Auth state change event:', event);
       if (session?.user) {
+        console.log('[AUTH] Session updated via listener:', session.user.email);
         setUser(session.user);
-        const resolvedRole = (session.user.user_metadata?.role as UserRole) || 'customer';
+        const resolvedRole = normalizeRole(session.user.user_metadata?.role);
         const resolvedName = session.user.user_metadata?.full_name || session.user.user_metadata?.name || session.user.email?.split('@')[0] || 'User';
 
+        console.log('[AUTH] Role fetched via listener:', resolvedRole);
         setProfile({
           id: session.user.id,
           name: resolvedName,
@@ -100,6 +104,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         });
         setRole(resolvedRole);
       } else {
+        console.log('[AUTH] Listener received no session (signed out).');
         setUser(null);
         setProfile(null);
         setRole(null);
@@ -202,20 +207,37 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // Executed when user confirms logout in the modal
   const handleConfirmSignOut = async () => {
+    if (isSigningOut) return; // Prevent multiple clicks/requests
     console.log('[AuthContext] Logout confirmed. Executing session & storage cleanup...');
     setIsSigningOut(true);
+    setError(null);
+
     try {
-      await authService.signOut();
-    } finally {
+      const { error: signOutErr } = await authService.signOut();
+
+      if (signOutErr) {
+        console.error('[AuthContext] Logout failed:', signOutErr);
+        setError(`Failed to sign out: ${signOutErr}`);
+        setIsSigningOut(false);
+        setShowLogoutModal(false);
+        return; // Keep user signed in on failure!
+      }
+
       setUser(null);
       setProfile(null);
       setRole(null);
       setIsLoading(false);
       setIsSigningOut(false);
       setShowLogoutModal(false);
+
       if (typeof window !== 'undefined') {
         window.location.href = '/login';
       }
+    } catch (err: any) {
+      console.error('[AuthContext] Unexpected error during logout:', err);
+      setError(err?.message || 'Failed to sign out. Please try again.');
+      setIsSigningOut(false);
+      setShowLogoutModal(false);
     }
   };
 
@@ -240,8 +262,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     >
       {children}
 
-      {/* Global Logout Confirmation Modal */}
-      <LogoutModal
+      {/* Global Error Notification Toast */}
+      <Toast
+        toast={error ? { id: 'auth-error', title: 'Sign Out Notice', message: error, type: 'warning' } : null}
+        onClose={() => setError(null)}
+      />
+
+      {/* Global Confirmation Logout Dialog */}
+      <ConfirmLogoutDialog
         isOpen={showLogoutModal}
         isSigningOut={isSigningOut}
         onClose={() => setShowLogoutModal(false)}

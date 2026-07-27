@@ -2,6 +2,14 @@ import { supabase } from '@/lib/supabase';
 
 export type UserRole = 'customer' | 'shopkeeper' | 'admin';
 
+export const normalizeRole = (inputRole: any): UserRole => {
+  if (!inputRole || typeof inputRole !== 'string') return 'customer';
+  const cleaned = inputRole.toLowerCase().trim();
+  if (cleaned === 'admin') return 'admin';
+  if (cleaned === 'shopkeeper' || cleaned === 'vendor' || cleaned === 'seller') return 'shopkeeper';
+  return 'customer';
+};
+
 export interface AuthProfile {
   id: string;
   name: string;
@@ -116,14 +124,14 @@ export const authService = {
           ? {
               id: pAny.id,
               name: pAny.name,
-              role: pAny.role as UserRole,
+              role: normalizeRole(pAny.role),
               phone: pAny.phone,
               email: data.user.email,
             }
           : {
               id: data.user.id,
               name: data.user.user_metadata?.full_name || data.user.user_metadata?.name || email.split('@')[0],
-              role: (data.user.user_metadata?.role as UserRole) || 'customer',
+              role: normalizeRole(data.user.user_metadata?.role),
               phone: data.user.user_metadata?.phone || null,
               email: data.user.email,
             },
@@ -228,30 +236,32 @@ export const authService = {
 
   // 7. Get current user & session using real Supabase auth.getSession()
   getCurrentUser: async (): Promise<{ user: any; profile: AuthProfile | null }> => {
-    console.log('[authService] getCurrentUser Started');
+    console.log('[AUTH] getCurrentUser Started');
 
     const timeoutPromise = new Promise<{ user: any; profile: AuthProfile | null }>((resolve) => {
       setTimeout(() => {
-        console.warn('[authService] getCurrentUser timed out after 2500ms. Returning fallback null state.');
+        console.warn('[AUTH] getCurrentUser timed out after 2500ms. Returning fallback null state.');
         resolve({ user: null, profile: null });
       }, 2500);
     });
 
     const fetchPromise = (async (): Promise<{ user: any; profile: AuthProfile | null }> => {
       try {
+        console.log('[AUTH] Calling supabase.auth.getSession()...');
         const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
         if (sessionError) {
-          console.warn('[authService] getSession Error:', sessionError.message);
+          console.warn('[AUTH] getSession Error:', sessionError.message);
           return { user: null, profile: null };
         }
 
         if (!sessionData.session?.user) {
-          console.log('[authService] No active user session found');
+          console.log('[AUTH] Session loaded: No active session found.');
           return { user: null, profile: null };
         }
 
         const currentUser = sessionData.session.user;
-        console.log('[authService] Session user loaded:', currentUser.email);
+        console.log('[AUTH] Session loaded:', currentUser.email);
+        console.log('[AUTH] Fetching role from public.profiles...');
 
         const { data: profile, error: profileFetchError } = await (supabase.from('profiles') as any)
           .select('*')
@@ -259,7 +269,7 @@ export const authService = {
           .maybeSingle();
 
         if (profileFetchError) {
-          console.warn('[authService] Profile fetch error in getCurrentUser:', profileFetchError.message);
+          console.warn('[AUTH] Profile fetch warning:', profileFetchError.message);
         }
 
         const pAny = profile as any;
@@ -267,22 +277,23 @@ export const authService = {
           ? {
               id: pAny.id,
               name: pAny.name,
-              role: pAny.role as UserRole,
+              role: normalizeRole(pAny.role),
               phone: pAny.phone,
               email: currentUser.email,
             }
           : {
               id: currentUser.id,
               name: currentUser.user_metadata?.full_name || currentUser.user_metadata?.name || currentUser.email?.split('@')[0] || 'User',
-              role: (currentUser.user_metadata?.role as UserRole) || 'customer',
+              role: normalizeRole(currentUser.user_metadata?.role),
               phone: currentUser.user_metadata?.phone || null,
               email: currentUser.email,
             };
 
-        console.log('[authService] Profile & Role determined:', resolvedProfile.role);
+        console.log('[AUTH] Role fetched:', resolvedProfile.role);
+        console.log('[AUTH] getCurrentUser Completed');
         return { user: currentUser, profile: resolvedProfile };
       } catch (err) {
-        console.error('[authService] Unexpected error in getCurrentUser:', err);
+        console.error('[AUTH] getCurrentUser Failed with exception:', err);
         return { user: null, profile: null };
       }
     })();

@@ -30,6 +30,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  console.log('[BOOT] App RootLayout rendered');
   return (
     <html lang="en" suppressHydrationWarning className={`${inter.variable} scroll-smooth`}>
       <body suppressHydrationWarning className="antialiased bg-white text-slate-900 overflow-x-hidden">

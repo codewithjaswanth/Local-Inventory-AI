@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
+import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import { useRole } from '@/hooks/useRole';
 import { UserRole } from '@/services/auth.service';
@@ -11,37 +12,43 @@ interface RoleGuardProps {
 }
 
 export const RoleGuard: React.FC<RoleGuardProps> = ({ allowedRoles, children }) => {
+  const router = useRouter();
   const { user, isLoading: isAuthLoading } = useAuth();
   const { role, isLoading: isRoleLoading } = useRole();
   const [mounted, setMounted] = useState(false);
-  const [timedOut, setTimedOut] = useState(false);
 
   useEffect(() => {
+    console.log('[ROLEGUARD] Mounted');
     setMounted(true);
-    const timer = setTimeout(() => {
-      setTimedOut(true);
-    }, 1500);
-    return () => clearTimeout(timer);
   }, []);
 
-  const isLoading = !mounted || ((isAuthLoading || isRoleLoading) && !timedOut);
+  const allowedRolesKey = useMemo(() => allowedRoles.slice().sort().join(','), [allowedRoles]);
+
+  const isLoading = !mounted || isAuthLoading || isRoleLoading;
+  const normalizedRole: UserRole | null = role ? (role.toLowerCase().trim() as UserRole) : null;
+  const isAuthorized = Boolean(user && normalizedRole && allowedRoles.includes(normalizedRole));
+
+  console.log('[ROLEGUARD] Entered', { mounted, isAuthLoading, isRoleLoading, isLoading, userEmail: user?.email, role: normalizedRole, allowedRolesKey });
 
   useEffect(() => {
-    if (!isLoading) {
-      if (!user) {
-        console.warn('[RoleGuard] Unauthenticated access. Redirecting to /login');
-        window.location.href = '/login';
-        return;
-      }
+    if (!mounted || isLoading) return;
 
-      if (role && !allowedRoles.includes(role)) {
-        console.warn(`[RoleGuard] Access Denied: User role "${role}" is not in allowed roles:`, allowedRoles);
-        window.location.href = '/unauthorized';
-      }
+    if (!user) {
+      console.warn('[ROLEGUARD] Unauthenticated. Redirecting to /login');
+      router.replace('/login');
+      return;
     }
-  }, [user, role, isLoading, allowedRoles]);
+
+    if (!isAuthorized) {
+      console.warn(`[ROLEGUARD] Access Denied for role "${normalizedRole}". Redirecting to /unauthorized`);
+      router.replace('/unauthorized');
+    } else {
+      console.log('[ROLEGUARD] Authorized for role:', normalizedRole);
+    }
+  }, [mounted, isLoading, user, normalizedRole, isAuthorized, allowedRolesKey, router]);
 
   if (isLoading) {
+    console.log('[ROLEGUARD] Loading...');
     return (
       <div className="min-h-screen bg-[#060B14] text-white flex items-center justify-center p-4">
         <div className="text-center space-y-3">
@@ -52,7 +59,7 @@ export const RoleGuard: React.FC<RoleGuardProps> = ({ allowedRoles, children }) 
     );
   }
 
-  if (!user || (role && !allowedRoles.includes(role))) {
+  if (!user || !isAuthorized) {
     return null;
   }
 
