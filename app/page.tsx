@@ -56,7 +56,7 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 relative transition-colors duration-200">
+    <main className="min-h-screen bg-transparent text-slate-900 dark:text-slate-100 relative transition-colors duration-200">
       {/* 1. Responsive Navbar with Dark Mode Toggle */}
       <Navbar onOpenSearch={() => setIsSearchOpen(true)} />
 

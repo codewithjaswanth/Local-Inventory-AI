@@ -10,9 +10,18 @@ import { ProcessingTimeline } from '@/components/shopkeeper/ProcessingTimeline';
 import { InventoryTable } from '@/components/shopkeeper/InventoryTable';
 import { SuccessCard } from '@/components/shopkeeper/SuccessCard';
 import { mockAiService, ExtractedInventoryItem } from '@/services/mockAI';
+import { RoleGuard } from '@/components/auth/RoleGuard';
 import { Sparkles, PhoneCall, ChevronRight } from 'lucide-react';
 
 export default function ShopkeeperUpdatePage() {
+  return (
+    <RoleGuard allowedRoles={['shopkeeper', 'admin']}>
+      <ShopkeeperUpdatePageContent />
+    </RoleGuard>
+  );
+}
+
+function ShopkeeperUpdatePageContent() {
   const [step, setStep] = useState(1);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [voiceText, setVoiceText] = useState<string | null>(null);

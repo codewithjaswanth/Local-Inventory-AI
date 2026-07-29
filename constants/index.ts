@@ -1,5 +1,5 @@
 export const APP_CONFIG = {
-  name: 'Local Inventory AI',
+  name: 'Inventra',
   tagline: 'Hyperlocal Live Produce & Grocery Marketplace',
   description: 'Search nearby vegetable and fruit shops with live inventory powered by AI.',
   version: '2.4.0',

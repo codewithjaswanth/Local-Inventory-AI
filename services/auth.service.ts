@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase';
+import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 
 export type UserRole = 'customer' | 'shopkeeper' | 'admin';
 
@@ -19,6 +19,113 @@ export interface AuthProfile {
 }
 
 export const authService = {
+  // Centralized method to resolve user profile from DB with metadata & localStorage fallback
+  getProfile: async (
+    userId: string,
+    userMetadata?: any,
+    email?: string,
+    requestedRole?: UserRole
+  ): Promise<AuthProfile> => {
+    const fallbackName =
+      userMetadata?.full_name || userMetadata?.name || (email ? email.split('@')[0] : 'User');
+    const fallbackPhone = userMetadata?.phone || null;
+
+    // Check localStorage cache for user role
+    let cachedRole: UserRole | null = null;
+    if (typeof window !== 'undefined' && userId) {
+      const stored = localStorage.getItem(`local_inventory_role_${userId}`);
+      if (stored) cachedRole = normalizeRole(stored);
+    }
+
+    // Priority: requestedRole > cachedRole > userMetadata.role > email pattern
+    let inferredRole: UserRole | null = requestedRole ? normalizeRole(requestedRole) : cachedRole;
+    if (!inferredRole && userMetadata?.role) {
+      inferredRole = normalizeRole(userMetadata?.role);
+    }
+    if (!inferredRole && email) {
+      const lowerEmail = email.toLowerCase();
+      if (lowerEmail.includes('admin')) {
+        inferredRole = 'admin';
+      } else if (lowerEmail.includes('shopkeeper') || lowerEmail.includes('vendor') || lowerEmail.includes('seller')) {
+        inferredRole = 'shopkeeper';
+      }
+    }
+    const finalRole: UserRole = inferredRole || 'customer';
+
+    // Store resolved role in localStorage cache
+    if (typeof window !== 'undefined' && userId) {
+      localStorage.setItem(`local_inventory_role_${userId}`, finalRole);
+    }
+
+    if (!isSupabaseConfigured) {
+      return {
+        id: userId,
+        name: fallbackName,
+        role: finalRole,
+        phone: fallbackPhone,
+        email: email,
+      };
+    }
+
+    try {
+      const { data: profile, error } = await (supabase.from('profiles') as any)
+        .select('*')
+        .eq('id', userId)
+        .maybeSingle();
+
+      if (!error && profile) {
+        const existingRole = normalizeRole(profile.role);
+        // If user requested a specific role on login form or email pattern indicates non-customer role, update DB!
+        const targetRole = requestedRole
+          ? normalizeRole(requestedRole)
+          : existingRole === 'customer' && finalRole !== 'customer'
+          ? finalRole
+          : existingRole;
+
+        if (targetRole !== existingRole) {
+          console.log(`[authService] Upgrading profile role in DB for ${email} from ${existingRole} to ${targetRole}`);
+          await (supabase.from('profiles') as any).upsert({
+            id: userId,
+            name: profile.name || fallbackName,
+            role: targetRole,
+            phone: profile.phone || fallbackPhone,
+          });
+        }
+
+        if (typeof window !== 'undefined' && userId) {
+          localStorage.setItem(`local_inventory_role_${userId}`, targetRole);
+        }
+
+        return {
+          id: profile.id,
+          name: profile.name || fallbackName,
+          role: targetRole,
+          phone: profile.phone || fallbackPhone,
+          email: email,
+        };
+      } else {
+        // Create missing profile in DB with resolved role
+        console.log(`[authService] Creating profile in DB for ${email} with role: ${finalRole}`);
+        await (supabase.from('profiles') as any).upsert({
+          id: userId,
+          name: fallbackName,
+          role: finalRole,
+          phone: fallbackPhone,
+        });
+      }
+    } catch (err) {
+      console.warn('[authService] Profile DB query warning:', err);
+    }
+
+    return {
+      id: userId,
+      name: fallbackName,
+      role: finalRole,
+      phone: fallbackPhone,
+      email: email,
+    };
+  },
+
   // 1. Sign Up using real Supabase auth.signUp()
   signUp: async (
     email: string,
@@ -54,7 +161,7 @@ export const authService = {
       console.log('[authService] Creating Profile in public.profiles for user:', data.user.id);
 
       // Insert profile row into public.profiles
-      const { error: profileError } = await (supabase.from('profiles') as any).insert({
+      const { error: profileError } = await (supabase.from('profiles') as any).upsert({
         id: data.user.id,
         name,
         role,
@@ -65,7 +172,7 @@ export const authService = {
         console.error('[authService] Profile row insert error:', profileError.message);
       }
 
-      // Immediately sign out to ensure user is NOT automatically logged in after signup
+      // Immediately sign out to require manual login
       console.log('[authService] Signing out newly created user to require manual login...');
       await supabase.auth.signOut();
 
@@ -84,9 +191,10 @@ export const authService = {
   // 2. Sign In using real Supabase auth.signInWithPassword()
   signIn: async (
     email: string,
-    password: string
+    password: string,
+    requestedRole?: UserRole
   ): Promise<{ user: any; profile: AuthProfile | null; error: string | null }> => {
-    console.log('[authService] SignIn Started', { email });
+    console.log('[authService] SignIn Started', { email, requestedRole });
     try {
       const response = await supabase.auth.signInWithPassword({
         email,
@@ -106,35 +214,16 @@ export const authService = {
         return { user: null, profile: null, error: 'Sign in failed.' };
       }
 
-      // Fetch profile row from public.profiles using maybeSingle() instead of single()
-      const { data: profile, error: profileFetchError } = await (supabase.from('profiles') as any)
-        .select('*')
-        .eq('id', data.user.id)
-        .maybeSingle();
-
-      if (profileFetchError) {
-        console.warn('[authService] Profile fetch error during signIn:', profileFetchError.message);
-      }
-
-      const pAny = profile as any;
+      const resolvedProfile = await authService.getProfile(
+        data.user.id,
+        data.user.user_metadata,
+        data.user.email,
+        requestedRole
+      );
 
       return {
         user: data.user,
-        profile: pAny
-          ? {
-              id: pAny.id,
-              name: pAny.name,
-              role: normalizeRole(pAny.role),
-              phone: pAny.phone,
-              email: data.user.email,
-            }
-          : {
-              id: data.user.id,
-              name: data.user.user_metadata?.full_name || data.user.user_metadata?.name || email.split('@')[0],
-              role: normalizeRole(data.user.user_metadata?.role),
-              phone: data.user.user_metadata?.phone || null,
-              email: data.user.email,
-            },
+        profile: resolvedProfile,
         error: null,
       };
     } catch (err: any) {
@@ -261,33 +350,13 @@ export const authService = {
 
         const currentUser = sessionData.session.user;
         console.log('[AUTH] Session loaded:', currentUser.email);
-        console.log('[AUTH] Fetching role from public.profiles...');
+        console.log('[AUTH] Fetching profile from database...');
 
-        const { data: profile, error: profileFetchError } = await (supabase.from('profiles') as any)
-          .select('*')
-          .eq('id', currentUser.id)
-          .maybeSingle();
-
-        if (profileFetchError) {
-          console.warn('[AUTH] Profile fetch warning:', profileFetchError.message);
-        }
-
-        const pAny = profile as any;
-        const resolvedProfile: AuthProfile = pAny
-          ? {
-              id: pAny.id,
-              name: pAny.name,
-              role: normalizeRole(pAny.role),
-              phone: pAny.phone,
-              email: currentUser.email,
-            }
-          : {
-              id: currentUser.id,
-              name: currentUser.user_metadata?.full_name || currentUser.user_metadata?.name || currentUser.email?.split('@')[0] || 'User',
-              role: normalizeRole(currentUser.user_metadata?.role),
-              phone: currentUser.user_metadata?.phone || null,
-              email: currentUser.email,
-            };
+        const resolvedProfile = await authService.getProfile(
+          currentUser.id,
+          currentUser.user_metadata,
+          currentUser.email
+        );
 
         console.log('[AUTH] Role fetched:', resolvedProfile.role);
         console.log('[AUTH] getCurrentUser Completed');
@@ -301,3 +370,4 @@ export const authService = {
     return Promise.race([fetchPromise, timeoutPromise]);
   },
 };
+

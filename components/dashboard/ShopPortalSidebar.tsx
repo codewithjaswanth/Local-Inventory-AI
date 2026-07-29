@@ -25,6 +25,8 @@ import {
 import { useAuth } from '@/hooks/useAuth';
 import { useRole } from '@/hooks/useRole';
 import { UserRoleBadge } from '../auth/UserRoleBadge';
+import { Logo } from '../ui/Logo';
+import { ThemeToggle } from '../ui/ThemeToggle';
 
 interface ShopPortalSidebarProps {
   activePath: string;
@@ -45,7 +47,8 @@ export const ShopPortalSidebar: React.FC<ShopPortalSidebarProps> = ({ activePath
 
   let navItems: SidebarNavItem[] = [
     { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
-    { name: 'Inventory', href: '/dashboard#inventory', icon: Boxes },
+    { name: 'Inventory', href: '/inventory', icon: Boxes },
+    { name: 'AI Assistant', href: '/ai-update', icon: Sparkles, badge: 'New' },
     { name: 'AI Review Queue', href: '/review', icon: CheckSquare, badge: '3', isAlert: true },
     { name: 'Analytics', href: '/dashboard#analytics', icon: BarChart3 },
     { name: 'Profile', href: '/profile', icon: Store },
@@ -54,10 +57,12 @@ export const ShopPortalSidebar: React.FC<ShopPortalSidebarProps> = ({ activePath
 
   if (isAdmin) {
     navItems = [
-      { name: 'System Overview', href: '/admin', icon: LayoutDashboard },
+      { name: 'Admin Console', href: '/admin', icon: ShieldCheck, badge: 'Admin' },
+      { name: 'Shopkeeper Portal', href: '/dashboard', icon: LayoutDashboard },
       { name: 'Registered Shops', href: '/admin#shops', icon: Store, badge: '48 Active' },
       { name: 'Global Stock', href: '/admin#inventory', icon: Package },
       { name: 'AI Extraction Logs', href: '/admin#ai-logs', icon: Cpu, badge: 'Realtime' },
+      { name: 'AI Review Queue', href: '/review', icon: CheckSquare, badge: '3', isAlert: true },
       { name: 'Profile', href: '/profile', icon: Store },
       { name: 'Settings', href: '/settings', icon: Settings },
     ];
@@ -97,9 +102,7 @@ export const ShopPortalSidebar: React.FC<ShopPortalSidebarProps> = ({ activePath
       {/* Brand & Workspace Header */}
       <div className="p-4 border-b border-slate-800/80">
         <a href="/" className="flex items-center space-x-3 overflow-hidden">
-          <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-emerald-600 to-teal-400 text-white flex items-center justify-center shadow-lg shadow-emerald-500/20 shrink-0">
-            <Sparkles className="w-5 h-5 text-white" />
-          </div>
+          <Logo size="sm" showText={false} />
 
           {!collapsed && (
             <motion.div
@@ -109,9 +112,9 @@ export const ShopPortalSidebar: React.FC<ShopPortalSidebarProps> = ({ activePath
               className="flex flex-col truncate"
             >
               <span className="font-extrabold text-sm text-white tracking-tight leading-none">
-                Local Inventory<span className="text-emerald-400">.AI</span>
+                Inventra<span className="text-emerald-400">.AI</span>
               </span>
-              <span className="text-[10px] font-mono text-emerald-400/90 mt-1 uppercase tracking-wider font-semibold">
+              <span className="text-[10px] text-emerald-400/90 mt-1 uppercase tracking-wider font-semibold">
                 {workspaceTitle}
               </span>
             </motion.div>
@@ -121,11 +124,11 @@ export const ShopPortalSidebar: React.FC<ShopPortalSidebarProps> = ({ activePath
 
       {/* Workspace Switcher & Role Badge */}
       {!collapsed && (
-        <div className="mx-3 my-3 p-3 rounded-2xl bg-slate-900/90 border border-slate-800/90 flex flex-col space-y-2">
+        <div className="mx-3 my-3 p-3 rounded-2xl bg-slate-200/70 dark:bg-slate-900/90 border border-slate-300/80 dark:border-slate-800/90 flex flex-col space-y-2">
           <div className="flex items-center justify-between">
             <UserRoleBadge role={role} />
           </div>
-          <span className="text-[10px] font-mono text-slate-400 truncate">
+          <span className="text-[10px] text-slate-600 dark:text-slate-400 truncate">
             {profile?.name || 'Active User Session'}
           </span>
         </div>
@@ -134,37 +137,36 @@ export const ShopPortalSidebar: React.FC<ShopPortalSidebarProps> = ({ activePath
       {/* Navigation Links */}
       <nav className="p-3 space-y-1.5 flex-1" aria-label="Sidebar Navigation">
         {!collapsed && (
-          <div className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-wider px-3 mb-2">
-            Authorised Navigation
+          <div className="text-[10px] font-bold text-slate-500 uppercase tracking-wider px-3 mb-2">
+            Navigation
           </div>
         )}
 
         {navItems.map((item) => {
           const Icon = item.icon;
-          const isActive = activePath === item.href || (item.href !== '/' && activePath.startsWith(`${item.href}`));
+          const isActive = activePath === item.href;
 
           return (
             <a
               key={item.name}
               href={item.href}
-              title={collapsed ? item.name : undefined}
-              className={`relative w-full flex items-center justify-between px-3.5 py-2.5 rounded-2xl font-medium text-xs transition-all ${
+              className={`flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-xs font-semibold transition-all ${
                 isActive
-                  ? 'bg-emerald-500/10 text-emerald-400 font-bold border border-emerald-500/30 shadow-inner'
-                  : 'text-slate-400 hover:text-slate-100 hover:bg-slate-900/60'
-              } ${collapsed ? 'justify-center px-0' : ''}`}
+                  ? 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30 font-bold'
+                  : 'text-slate-700 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-200/60 dark:hover:bg-slate-900/60'
+              }`}
             >
-              <div className="flex items-center space-x-3">
-                <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-emerald-400' : 'text-slate-400'}`} />
+              <div className="flex items-center space-x-3 truncate">
+                <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-500 dark:text-slate-400'}`} />
                 {!collapsed && <span>{item.name}</span>}
               </div>
 
               {!collapsed && item.badge && (
                 <span
-                  className={`px-2 py-0.5 rounded-full text-[10px] font-mono font-bold ${
+                  className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
                     item.isAlert
-                      ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30 animate-pulse'
-                      : 'bg-slate-800 text-slate-400'
+                      ? 'bg-amber-500/20 text-amber-600 dark:text-amber-400 border border-amber-500/30 animate-pulse'
+                      : 'bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-400'
                   }`}
                 >
                   {item.badge}
@@ -176,7 +178,7 @@ export const ShopPortalSidebar: React.FC<ShopPortalSidebarProps> = ({ activePath
       </nav>
 
       {/* User Profile & Sign Out Footer */}
-      <div className="p-3 border-t border-slate-800/80 bg-slate-950/60 flex items-center justify-between">
+      <div className="p-3 border-t border-slate-200 dark:border-slate-800/80 bg-slate-100 dark:bg-slate-950/60 flex items-center justify-between">
         <div className="flex items-center space-x-3 overflow-hidden">
           <img
             src="https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=150&q=80"
@@ -185,21 +187,24 @@ export const ShopPortalSidebar: React.FC<ShopPortalSidebarProps> = ({ activePath
           />
           {!collapsed && (
             <div className="flex flex-col text-xs truncate">
-              <span className="font-bold text-white truncate">{profile?.name || 'Active User'}</span>
-              <span className="text-[10px] text-slate-400 font-mono capitalize">{role || 'Customer'}</span>
+              <span className="font-bold text-slate-900 dark:text-white truncate">{profile?.name || 'Active User'}</span>
+              <span className="text-[10px] text-slate-500 dark:text-slate-400 font-mono capitalize">{role || 'Customer'}</span>
             </div>
           )}
         </div>
 
         {!collapsed && (
-          <button
-            type="button"
-            onClick={() => signOut()}
-            className="p-2 rounded-xl text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 transition-colors"
-            title="Sign Out"
-          >
-            <LogOut className="w-4 h-4" />
-          </button>
+          <div className="flex items-center space-x-1">
+            <ThemeToggle />
+            <button
+              type="button"
+              onClick={() => signOut()}
+              className="p-2 rounded-xl text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 transition-colors"
+              title="Sign Out"
+            >
+              <LogOut className="w-4 h-4" />
+            </button>
+          </div>
         )}
       </div>
     </aside>

@@ -19,10 +19,10 @@ export const MapPlaceholder: React.FC = () => {
       <div className="relative z-10 flex items-center justify-between">
         <div className="flex items-center space-x-2 bg-slate-800/80 backdrop-blur-md px-3 py-1.5 rounded-full border border-slate-700/60 text-xs font-semibold">
           <Navigation className="w-3.5 h-3.5 text-emerald-400 animate-spin" />
-          <span>Hyperlocal Live Radar: Downtown (2.0 mi radius)</span>
+          <span>Hyperlocal Live Radar: Downtown (3.0 km radius)</span>
         </div>
 
-        <span className="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2.5 py-1 rounded-full text-[10px] font-mono font-bold flex items-center">
+        <span className="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2.5 py-1 rounded-full text-[10px] font-bold flex items-center">
           <Sparkles className="w-3 h-3 mr-1" /> 6 Active Shops Pins
         </span>
       </div>

@@ -23,7 +23,7 @@ export const NearbyShops: React.FC<NearbyShopsProps> = ({ onSelectShop }) => {
   });
 
   return (
-    <section id="shops" aria-label="Nearby Shops Section" className="py-24 bg-white dark:bg-slate-950 relative transition-colors">
+    <section id="shops" aria-label="Nearby Shops Section" className="py-24 bg-transparent relative transition-colors">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header with Filter Tabs */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">

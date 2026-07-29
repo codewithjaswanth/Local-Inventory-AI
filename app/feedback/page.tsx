@@ -5,7 +5,17 @@ import { ShopPortalSidebar } from '@/components/dashboard/ShopPortalSidebar';
 import { CUSTOMER_FEEDBACK_DATA } from '@/data/shopPortalData';
 import { MessageSquare, Star, ShieldCheck, Award, ChevronRight } from 'lucide-react';
 
+import { RoleGuard } from '@/components/auth/RoleGuard';
+
 export default function CustomerFeedbackPage() {
+  return (
+    <RoleGuard allowedRoles={['shopkeeper', 'admin']}>
+      <CustomerFeedbackPageContent />
+    </RoleGuard>
+  );
+}
+
+function CustomerFeedbackPageContent() {
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex overflow-hidden">
       <ShopPortalSidebar activePath="/feedback" />

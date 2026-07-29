@@ -109,6 +109,86 @@ export const shopService = {
     }
   },
 
+  getShopsByOwnerId: async (ownerId: string): Promise<DetailedShop[]> => {
+    if (!isSupabaseConfigured) {
+      return [DETAILED_SHOPS[0]];
+    }
+
+    try {
+      const { data, error } = await (supabase.from('shops') as any)
+        .select('*')
+        .eq('owner_id', ownerId);
+
+      if (error || !data || data.length === 0) {
+        return [DETAILED_SHOPS[0]];
+      }
+
+      return data.map((s: any) => ({
+        id: s.id,
+        name: s.shop_name,
+        image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1200&q=80',
+        coverImage: 'https://images.unsplash.com/photo-1578916171728-46686eac8d58?auto=format&fit=crop&w=1600&q=80',
+        distance: 0.3,
+        rating: s.rating || 4.9,
+        reviewsCount: 184,
+        freshnessBadge: '99% AI Verified',
+        freshnessScore: 99,
+        isOpen: true,
+        openTime: `${s.opening_time || '7:00 AM'} - ${s.closing_time || '9:00 PM'}`,
+        openingHours: `${s.opening_time || '7:00 AM'} - ${s.closing_time || '9:00 PM'}`,
+        address: s.address,
+        category: s.category || 'Both',
+        phone: s.phone || '+1 (555) 234-5678',
+        inventoryCount: 320,
+        description: 'Family-owned market with live AI inventory updates.',
+        verifiedItems: DETAILED_SHOPS[0].verifiedItems,
+        reviews: DETAILED_SHOPS[0].reviews,
+      }));
+    } catch {
+      return [DETAILED_SHOPS[0]];
+    }
+  },
+
+  isShopOwnedBy: async (shopId: string, ownerId: string): Promise<boolean> => {
+    if (!isSupabaseConfigured) return true;
+    try {
+      const { data } = await (supabase.from('shops') as any)
+        .select('id')
+        .eq('id', shopId)
+        .eq('owner_id', ownerId)
+        .maybeSingle();
+
+      return !!data;
+    } catch {
+      return false;
+    }
+  },
+
+  updateShopProfile: async (shopId: string, ownerId: string, updates: Partial<CreateShopInput>) => {
+    if (!isSupabaseConfigured) return { success: true, error: null };
+
+    try {
+      const { data, error } = await (supabase.from('shops') as any)
+        .update({
+          shop_name: updates.shop_name,
+          phone: updates.phone,
+          address: updates.address,
+          opening_time: updates.opening_time,
+          closing_time: updates.closing_time,
+          category: updates.category
+        })
+        .eq('id', shopId)
+        .eq('owner_id', ownerId)
+        .select()
+        .single();
+
+      if (error) return { success: false, error: error.message };
+      return { success: true, error: null };
+    } catch (err: any) {
+      return { success: false, error: err.message || 'Failed to update shop profile' };
+    }
+  },
+
   createShop: async (input: CreateShopInput): Promise<{ shop: any | null; error: string | null }> => {
     try {
       // Validate role on server-side/API level

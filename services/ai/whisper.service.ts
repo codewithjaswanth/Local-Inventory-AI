@@ -6,7 +6,7 @@ export const whisperService = {
 
     if (!apiKey) {
       console.warn('[Whisper API] Key missing, using high-accuracy fallback transcript.');
-      return '🎙️ Transcribed (Whisper): "Just received a fresh crate of 25kg Organic Vine Tomatoes at $2.49 per lb, 40kg Yukon Potatoes at $1.99 per lb, and 15 bundles of Fresh Spinach at $2.99 each."';
+      return '🎙️ Transcribed (Whisper): "Just received a fresh crate of 25kg Organic Vine Tomatoes at ₹199 per kg, 40kg Yukon Potatoes at ₹159 per kg, and 15 bundles of Fresh Spinach at ₹239 each."';
     }
 
     return withRetry(async () => {

@@ -29,7 +29,7 @@ export const PopularCategories: React.FC<PopularCategoriesProps> = ({ onCategory
   };
 
   return (
-    <section id="categories" aria-label="Popular Fresh Categories" className="py-20 bg-slate-50 dark:bg-slate-900/60 border-y border-slate-100 dark:border-slate-800 relative transition-colors">
+    <section id="categories" aria-label="Popular Fresh Categories" className="py-20 bg-transparent border-y border-slate-200/60 dark:border-slate-800/60 relative transition-colors">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-12">

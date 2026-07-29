@@ -85,7 +85,7 @@ export const RECENT_AI_LOGS: AiLogEntry[] = [
     id: 'log-1',
     shopName: 'Green Earth Organics',
     inputType: 'Voice Note',
-    extractedSummary: 'Extracted: 50kg Vine Tomatoes at $2.49/lb, 20 packs Avocados at $1.99',
+    extractedSummary: 'Extracted: 50kg Vine Tomatoes at ₹199/kg, 20 packs Avocados at ₹159',
     confidenceScore: 99.4,
     status: 'Validated',
     timestamp: '2 mins ago'
@@ -94,7 +94,7 @@ export const RECENT_AI_LOGS: AiLogEntry[] = [
     id: 'log-2',
     shopName: 'Sunshine Fruit Depot',
     inputType: 'WhatsApp Photo',
-    extractedSummary: 'OCR Vision: Strawberries crate (24 units), Honeycrisp Apples (75 lbs)',
+    extractedSummary: 'OCR Vision: Strawberries crate (24 units), Honeycrisp Apples (75 kg)',
     confidenceScore: 98.1,
     status: 'Validated',
     timestamp: '6 mins ago'
@@ -103,7 +103,7 @@ export const RECENT_AI_LOGS: AiLogEntry[] = [
     id: 'log-3',
     shopName: 'Artisan Bakery & Dairy',
     inputType: 'Voice Note',
-    extractedSummary: 'Extracted: Fresh batch 18 French Croissants at $2.75/ea',
+    extractedSummary: 'Extracted: Fresh batch 18 French Croissants at ₹220/ea',
     confidenceScore: 100.0,
     status: 'Validated',
     timestamp: '12 mins ago'
@@ -112,7 +112,7 @@ export const RECENT_AI_LOGS: AiLogEntry[] = [
     id: 'log-4',
     shopName: 'Corner Fresh Farmers Market',
     inputType: 'Receipt OCR',
-    extractedSummary: 'Extracted: Yellow Onions ($2.99), Russet Potatoes 5lb ($3.49)',
+    extractedSummary: 'Extracted: Yellow Onions (₹239), Russet Potatoes 5kg (₹279)',
     confidenceScore: 92.5,
     status: 'Flagged Review',
     timestamp: '25 mins ago'

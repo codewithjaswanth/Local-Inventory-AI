@@ -5,6 +5,7 @@ import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 import { Sparkles, UserPlus, Lock, Mail, User, Phone, CheckCircle, Eye, EyeOff } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
+import { Logo } from '@/components/ui/Logo';
 import { useAuth } from '@/hooks/useAuth';
 import { UserRole } from '@/services/auth.service';
 
@@ -87,8 +88,8 @@ export default function SignupPage() {
       <div className="pt-28 pb-16 max-w-md mx-auto px-4 w-full">
         <form onSubmit={handleSignup} className="bg-white dark:bg-slate-900 p-8 rounded-3xl border border-slate-200/80 dark:border-slate-800 space-y-5 shadow-xl">
           <div className="text-center space-y-2">
-            <div className="w-12 h-12 rounded-2xl bg-emerald-500 text-white flex items-center justify-center mx-auto shadow-lg shadow-emerald-500/30">
-              <Sparkles className="w-6 h-6 text-white" />
+            <div className="flex justify-center mx-auto mb-1">
+              <Logo size="lg" showText={false} />
             </div>
             <h1 className="text-2xl font-extrabold text-slate-900 dark:text-white">
               Create Supabase Account

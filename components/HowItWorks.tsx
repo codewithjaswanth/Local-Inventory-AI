@@ -6,122 +6,83 @@ import { HOW_IT_WORKS_STEPS } from '@/data/mockData';
 import { Camera, Mic, Cpu, Search, Navigation, Star, ArrowRight, CheckCircle2 } from 'lucide-react';
 
 export const HowItWorks: React.FC = () => {
-  const [activeStep, setActiveStep] = useState<number>(1);
-
-  const renderIcon = (iconName: string) => {
-    switch (iconName) {
-      case 'Camera':
-        return <Camera className="w-5 h-5" />;
-      case 'Mic':
-        return <Mic className="w-5 h-5" />;
-      case 'Cpu':
-        return <Cpu className="w-5 h-5" />;
-      case 'Search':
-        return <Search className="w-5 h-5" />;
-      case 'Navigation':
-        return <Navigation className="w-5 h-5" />;
-      case 'Star':
-      default:
-        return <Star className="w-5 h-5" />;
-    }
-  };
+  const steps = [
+    {
+      num: '01',
+      title: 'Snap or Voice Input',
+      desc: 'Shopkeepers post shelf photos or speak voice notes on WhatsApp to report new stock instantly.',
+      icon: <Camera className="w-6 h-6 text-emerald-500" />,
+      tag: 'Shopkeeper',
+    },
+    {
+      num: '02',
+      title: 'AI Vision & Freshness Sync',
+      desc: 'Multi-modal AI parses images and audio in <0.4s to detect item names, prices, and freshness scores.',
+      icon: <Cpu className="w-6 h-6 text-indigo-500" />,
+      tag: 'AI Engine',
+    },
+    {
+      num: '03',
+      title: 'Instant Local Discovery',
+      desc: 'Shoppers search nearby live stock in real-time, view verified prices, and visit the store for pickup.',
+      icon: <Navigation className="w-6 h-6 text-amber-500" />,
+      tag: 'Shopper',
+    },
+  ];
 
   return (
-    <section id="how-it-works" className="py-24 bg-slate-50 border-t border-slate-200/60 relative">
+    <section id="how-it-works" className="py-20 bg-transparent border-t border-slate-200/60 dark:border-slate-800/60 relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
-          <div className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold">
-            <span>SEAMLESS WORKFLOW</span>
+        <div className="text-center max-w-2xl mx-auto mb-12 space-y-3">
+          <div className="inline-flex items-center space-x-1.5 px-3.5 py-1 rounded-full bg-emerald-500/10 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-300 text-xs font-bold border border-emerald-500/20 dark:border-emerald-800/80">
+            <span>3 SIMPLE STEPS</span>
           </div>
 
-          <h2 className="text-3xl sm:text-5xl font-extrabold text-slate-900 tracking-tight">
-            How Local Inventory AI Works
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+            How Inventra Works
           </h2>
 
-          <p className="text-slate-600 text-base sm:text-lg">
-            From shelf picture to customer pickup in 6 simple automated steps.
+          <p className="text-slate-600 dark:text-slate-400 text-sm sm:text-base">
+            Connecting neighborhood stores with local shoppers in 3 automated steps.
           </p>
         </div>
 
-        {/* Desktop & Mobile Timeline Container */}
-        <div className="relative">
-          {/* Vertical Connecting Line (Desktop) */}
-          <div className="hidden lg:block absolute left-1/2 top-10 bottom-10 w-0.5 bg-emerald-200/70 -translate-x-1/2 z-0" />
-
-          <div className="space-y-8 lg:space-y-12 relative z-10">
-            {HOW_IT_WORKS_STEPS.map((step, idx) => {
-              const isEven = idx % 2 === 0;
-
-              return (
-                <motion.div
-                  key={step.stepNumber}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: idx * 0.08 }}
-                  onClick={() => setActiveStep(step.stepNumber)}
-                  className={`flex flex-col lg:flex-row items-center justify-between gap-8 ${
-                    isEven ? 'lg:flex-row-reverse' : ''
-                  }`}
-                >
-                  {/* Step Info Card */}
-                  <div className="w-full lg:w-[45%]">
-                    <div
-                      className={`p-6 sm:p-8 rounded-3xl bg-white border transition-all duration-300 shadow-sm hover:shadow-soft-xl ${
-                        activeStep === step.stepNumber
-                          ? 'border-emerald-500 ring-2 ring-emerald-500/20'
-                          : 'border-slate-200/80 hover:border-emerald-300'
-                      }`}
-                    >
-                      <div className="flex items-center justify-between mb-4">
-                        <span className="text-xs font-bold uppercase tracking-wider text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-100">
-                          {step.roleLabel}
-                        </span>
-
-                        <span className="text-xs font-mono font-semibold text-slate-400 bg-slate-100 px-2.5 py-1 rounded-lg">
-                          Step {step.stepNumber} of 6
-                        </span>
-                      </div>
-
-                      <h3 className="text-2xl font-extrabold text-slate-900">
-                        {step.title}
-                      </h3>
-
-                      <p className="mt-2 text-slate-600 text-sm leading-relaxed">
-                        {step.description}
-                      </p>
-
-                      {/* Interactive Visual Output Snippet */}
-                      {step.previewSnippet && (
-                        <div className="mt-4 p-3.5 rounded-2xl bg-slate-900 text-slate-100 text-xs font-mono border border-slate-800 shadow-inner">
-                          {step.previewSnippet.content}
-                        </div>
-                      )}
-                    </div>
+        {/* 3 Step Card Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {steps.map((step, idx) => (
+            <motion.div
+              key={step.num}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.4, delay: idx * 0.1 }}
+              className="p-6 sm:p-7 rounded-3xl bg-white/90 dark:bg-[#091122]/90 backdrop-blur-xl border border-slate-200/80 dark:border-slate-800/80 shadow-md hover:shadow-xl transition-all flex flex-col justify-between"
+            >
+              <div>
+                <div className="flex items-center justify-between mb-5">
+                  <div className="w-12 h-12 rounded-2xl bg-slate-100 dark:bg-slate-800/80 flex items-center justify-center">
+                    {step.icon}
                   </div>
+                  <span className="text-2xl font-black font-mono text-slate-300 dark:text-slate-700">
+                    {step.num}
+                  </span>
+                </div>
 
-                  {/* Central Node Badge Icon */}
-                  <div className="flex items-center justify-center">
-                    <div
-                      className={`w-14 h-14 rounded-2xl flex items-center justify-center font-bold shadow-lg transition-transform duration-300 ${
-                        step.role === 'shopkeeper'
-                          ? 'bg-emerald-500 text-white shadow-emerald-500/30'
-                          : step.role === 'ai'
-                          ? 'bg-slate-900 text-emerald-400 shadow-slate-900/40 ring-4 ring-emerald-400/20'
-                          : 'bg-amber-500 text-white shadow-amber-500/30'
-                      }`}
-                    >
-                      {renderIcon(step.icon)}
-                    </div>
-                  </div>
+                <div className="inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/20 mb-2">
+                  {step.tag}
+                </div>
 
-                  {/* Empty Spacer Column for Desktop alternating layout */}
-                  <div className="hidden lg:block w-[45%]" />
-                </motion.div>
-              );
-            })}
-          </div>
+                <h3 className="text-xl font-bold text-slate-900 dark:text-white">
+                  {step.title}
+                </h3>
+
+                <p className="mt-2 text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
+                  {step.desc}
+                </p>
+              </div>
+            </motion.div>
+          ))}
         </div>
       </div>
     </section>

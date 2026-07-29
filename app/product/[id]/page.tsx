@@ -9,6 +9,7 @@ import { FreshnessBadge } from '@/components/ui/FreshnessBadge';
 import { DistanceBadge } from '@/components/ui/DistanceBadge';
 import { InventoryStatusBadge } from '@/components/ui/InventoryStatusBadge';
 import { ProductCard } from '@/components/cards/ProductCard';
+import { GetDirectionsButton } from '@/components/navigation/GetDirectionsButton';
 import {
   Sparkles,
   MapPin,
@@ -114,7 +115,7 @@ export default function ProductDetailsPage({ params }: PageProps) {
               {/* Price */}
               <div className="flex items-baseline space-x-2 border-b border-slate-100 dark:border-slate-800 pb-4">
                 <span className="text-4xl font-black text-slate-900 dark:text-white">
-                  ${product.price.toFixed(2)}
+                  ₹{typeof product.price === 'number' ? (product.price % 1 === 0 ? product.price : product.price.toFixed(2)) : product.price}
                 </span>
                 <span className="text-sm font-medium text-slate-500 dark:text-slate-400">
                   / {product.unit}
@@ -152,20 +153,32 @@ export default function ProductDetailsPage({ params }: PageProps) {
                 </div>
 
                 <p className="text-xs text-slate-500 dark:text-slate-400">📍 {product.shopAddress}</p>
+                {product.nearbyLandmark && (
+                  <p className="text-xs text-emerald-400 font-bold">📍 Landmark: {product.nearbyLandmark}</p>
+                )}
 
-                <div className="pt-2 flex items-center space-x-2">
+                <div className="pt-2 flex items-center justify-between">
                   <a
                     href={`/shop/${product.shopId}`}
                     className="text-xs font-bold text-emerald-600 dark:text-emerald-400 hover:underline flex items-center"
                   >
-                    View Store Inventory & Directions →
+                    View Store Inventory →
                   </a>
+                  <GetDirectionsButton
+                    shopName={product.shopName}
+                    shopAddress={product.shopAddress}
+                    nearbyLandmark={product.nearbyLandmark}
+                    shopLatitude={product.shopLatitude}
+                    shopLongitude={product.shopLongitude}
+                    distanceKm={product.distance}
+                    variant="compact"
+                  />
                 </div>
               </div>
             </div>
 
             {/* Action Buttons */}
-            <div className="space-y-3 pt-4 border-t border-slate-100 dark:border-slate-800">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-4 border-t border-slate-100 dark:border-slate-800">
               <Button
                 onClick={handleReserve}
                 disabled={reserved}
@@ -174,8 +187,18 @@ export default function ProductDetailsPage({ params }: PageProps) {
                 className="w-full shadow-lg shadow-emerald-500/25"
                 leftIcon={<CheckCircle2 className="w-5 h-5" />}
               >
-                {reserved ? 'Item Reserved for Pickup!' : 'Reserve Item for 15-Min Pickup'}
+                {reserved ? 'Item Reserved!' : 'Reserve for 15-Min Pickup'}
               </Button>
+              <GetDirectionsButton
+                shopName={product.shopName}
+                shopAddress={product.shopAddress}
+                nearbyLandmark={product.nearbyLandmark}
+                shopLatitude={product.shopLatitude}
+                shopLongitude={product.shopLongitude}
+                distanceKm={product.distance}
+                variant="secondary"
+                className="w-full h-12 text-sm"
+              />
             </div>
           </div>
         </div>

@@ -7,6 +7,7 @@ import { SearchModal } from '@/components/SearchModal';
 import { InventoryCard } from '@/components/cards/InventoryCard';
 import { DETAILED_SHOPS, DetailedShop } from '@/data/mockData';
 import { SEARCH_PRODUCTS } from '@/data/searchProducts';
+import { GetDirectionsButton } from '@/components/navigation/GetDirectionsButton';
 import {
   MapPin,
   Star,
@@ -143,7 +144,7 @@ export default function ShopDetailsPage({ params }: PageProps) {
                 <div className="w-px h-4 bg-slate-700" />
                 <div className="flex items-center text-slate-200 font-medium">
                   <MapPin className="w-4 h-4 text-emerald-400 mr-1" />
-                  <span>{shop.distance} mi</span>
+                  <span>{shop.distance}</span>
                 </div>
               </div>
             </div>
@@ -154,9 +155,20 @@ export default function ShopDetailsPage({ params }: PageProps) {
         <div className="bg-white dark:bg-slate-900 border-b border-slate-200/80 dark:border-slate-800 shadow-xs">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div className="space-y-1 text-xs sm:text-sm text-slate-600 dark:text-slate-400">
-              <div className="flex items-center space-x-2 font-medium">
-                <MapPin className="w-4 h-4 text-slate-400 flex-shrink-0" />
-                <span>{shop.address}</span>
+              <div className="flex flex-wrap items-center gap-2 font-bold text-slate-200">
+                <span className="text-emerald-400 font-extrabold flex items-center gap-1">
+                  <MapPin className="w-4 h-4 text-emerald-400 shrink-0" />
+                  Your Location
+                </span>
+                <span className="text-slate-500">➔</span>
+                <span className="text-slate-300 font-bold">
+                  {shop.name} ({shop.distance} away)
+                </span>
+                {shop.nearbyLandmark && (
+                  <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-bold">
+                    📍 {shop.nearbyLandmark}
+                  </span>
+                )}
               </div>
               <div className="flex items-center space-x-2">
                 <Clock className="w-4 h-4 text-slate-400 flex-shrink-0" />
@@ -173,13 +185,16 @@ export default function ShopDetailsPage({ params }: PageProps) {
                 <span>Call {shop.phone}</span>
               </button>
 
-              <button
-                onClick={handleGetDirections}
-                className="flex-1 sm:flex-initial px-6 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs sm:text-sm shadow-md shadow-emerald-500/25 transition-all flex items-center justify-center space-x-2"
-              >
-                <Navigation className="w-4 h-4" />
-                <span>Get Directions</span>
-              </button>
+              <GetDirectionsButton
+                shopName={shop.name}
+                shopAddress={shop.address}
+                nearbyLandmark={shop.nearbyLandmark}
+                shopLatitude={shop.latitude}
+                shopLongitude={shop.longitude}
+                distanceKm={typeof shop.distance === 'number' ? shop.distance : parseFloat(String(shop.distance)) || 1.0}
+                variant="primary"
+                className="px-6 py-2.5 rounded-xl font-bold text-xs sm:text-sm"
+              />
             </div>
           </div>
         </div>

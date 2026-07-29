@@ -43,6 +43,8 @@ export interface Shop {
   coverImage?: string;
   distance: number | string; // numeric or formatted string
   distanceText?: string;
+  latitude?: number;
+  longitude?: number;
   rating: number;
   reviewsCount: number;
   freshnessBadge: string;
@@ -51,6 +53,7 @@ export interface Shop {
   openTime: string;
   openingHours?: string;
   address: string;
+  nearbyLandmark?: string;
   category: string;
   phone: string;
   inventoryCount: number;
@@ -67,6 +70,9 @@ export interface Product {
   shopId: string;
   shopName: string;
   shopAddress: string;
+  nearbyLandmark?: string;
+  shopLatitude?: number;
+  shopLongitude?: number;
   shopRating: number;
   price: number;
   unit: string;

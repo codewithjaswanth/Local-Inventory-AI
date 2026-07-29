@@ -21,7 +21,8 @@ interface AuthContextType {
   ) => Promise<{ success: boolean; error: string | null }>;
   signIn: (
     email: string,
-    password: string
+    password: string,
+    role?: UserRole
   ) => Promise<{ success: boolean; error: string | null }>;
   signInWithGoogle: () => Promise<{ error: string | null }>;
   resetPasswordForEmail: (email: string) => Promise<{ error: string | null }>;
@@ -91,18 +92,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (session?.user) {
         console.log('[AUTH] Session updated via listener:', session.user.email);
         setUser(session.user);
-        const resolvedRole = normalizeRole(session.user.user_metadata?.role);
-        const resolvedName = session.user.user_metadata?.full_name || session.user.user_metadata?.name || session.user.email?.split('@')[0] || 'User';
+        
+        try {
+          const authProfile = await authService.getProfile(
+            session.user.id,
+            session.user.user_metadata,
+            session.user.email
+          );
 
-        console.log('[AUTH] Role fetched via listener:', resolvedRole);
-        setProfile({
-          id: session.user.id,
-          name: resolvedName,
-          role: resolvedRole,
-          phone: session.user.user_metadata?.phone || null,
-          email: session.user.email,
-        });
-        setRole(resolvedRole);
+          console.log('[AUTH] Role fetched via listener:', authProfile.role);
+          setProfile(authProfile);
+          setRole(authProfile.role);
+        } catch (err) {
+          console.error('[AUTH] Listener profile fetch error:', err);
+          const fallbackRole = normalizeRole(session.user.user_metadata?.role);
+          setRole(fallbackRole);
+        }
       } else {
         console.log('[AUTH] Listener received no session (signed out).');
         setUser(null);
@@ -156,15 +161,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const signIn = async (
     email: string,
-    password: string
+    password: string,
+    userRole?: UserRole
   ): Promise<{ success: boolean; error: string | null }> => {
-    console.log('[AuthContext] signIn method invoked');
+    console.log('[AuthContext] signIn method invoked with role:', userRole);
     setIsLoading(true);
     setError(null);
     try {
       const { user: signedUser, profile: signedProfile, error: err } = await authService.signIn(
         email,
-        password
+        password,
+        userRole
       );
 
       if (err || !signedUser) {
@@ -174,10 +181,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return { success: false, error: errorMsg };
       }
 
-      console.log('[AuthContext] signIn succeeded. Setting context state...');
+      console.log('[AuthContext] signIn succeeded. Resolved role:', signedProfile?.role);
       setUser(signedUser);
       setProfile(signedProfile);
-      setRole(signedProfile?.role || 'customer');
+      setRole(signedProfile?.role || userRole || 'customer');
       return { success: true, error: null };
     } finally {
       setIsLoading(false);

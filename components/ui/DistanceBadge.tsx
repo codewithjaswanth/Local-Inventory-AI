@@ -9,7 +9,7 @@ interface DistanceBadgeProps {
 }
 
 export const DistanceBadge: React.FC<DistanceBadgeProps> = ({ distance, className = '' }) => {
-  const formatted = typeof distance === 'number' ? `${distance.toFixed(1)} mi away` : distance;
+  const formatted = typeof distance === 'number' ? `${distance.toFixed(1)} km away` : distance;
 
   return (
     <span

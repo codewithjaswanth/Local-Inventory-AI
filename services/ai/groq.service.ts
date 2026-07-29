@@ -23,8 +23,8 @@ export const groqService = {
         {
           name: 'Organic Vine Tomatoes',
           category: 'Vegetables',
-          price: 2.49,
-          unit: 'lb',
+          price: 199,
+          unit: 'kg',
           quantity: 25,
           freshnessScore: 98,
           confidence: 96,
@@ -32,8 +32,8 @@ export const groqService = {
         {
           name: 'Yukon Gold Potatoes',
           category: 'Vegetables',
-          price: 1.99,
-          unit: 'lb',
+          price: 159,
+          unit: 'kg',
           quantity: 40,
           freshnessScore: 95,
           confidence: 92,
@@ -41,7 +41,7 @@ export const groqService = {
         {
           name: 'Fresh Bunch Spinach',
           category: 'Vegetables',
-          price: 2.99,
+          price: 239,
           unit: 'bundle',
           quantity: 15,
           freshnessScore: 97,

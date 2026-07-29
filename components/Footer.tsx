@@ -1,7 +1,8 @@
 'use client';
 
 import React from 'react';
-import { Sparkles, Twitter, Github, Linkedin, Instagram, ArrowRight, Heart } from 'lucide-react';
+import { Twitter, Github, Linkedin, Instagram } from 'lucide-react';
+import { Logo } from './ui/Logo';
 
 export const Footer: React.FC = () => {
   return (
@@ -10,13 +11,8 @@ export const Footer: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 mb-16">
           {/* Column 1: Brand Info */}
           <div className="lg:col-span-2 space-y-5">
-            <a href="#hero" className="flex items-center space-x-2.5">
-              <div className="w-9 h-9 rounded-xl bg-emerald-500 text-white flex items-center justify-center shadow-lg shadow-emerald-500/25">
-                <Sparkles className="w-5 h-5 text-white" />
-              </div>
-              <span className="font-extrabold text-xl text-white tracking-tight">
-                Local Inventory<span className="text-emerald-500">.AI</span>
-              </span>
+            <a href="#hero" className="group inline-block">
+              <Logo size="md" />
             </a>
 
             <p className="text-slate-400 text-sm leading-relaxed max-w-sm">
@@ -91,7 +87,7 @@ export const Footer: React.FC = () => {
         {/* Bottom Bar: Copyright & Socials */}
         <div className="pt-8 border-t border-slate-900 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-medium">
           <div className="flex items-center space-x-1 text-slate-500">
-            <span suppressHydrationWarning>© {new Date().getFullYear()} Local Inventory AI Inc. All rights reserved.</span>
+            <span suppressHydrationWarning>© {new Date().getFullYear()} Inventra Inc. All rights reserved.</span>
           </div>
 
           {/* Social Icons */}
