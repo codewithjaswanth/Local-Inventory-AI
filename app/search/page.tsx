@@ -30,6 +30,7 @@ function SearchPageContent() {
   const [minFreshness, setMinFreshness] = useState(85);
   const [isOpenNowOnly, setIsOpenNowOnly] = useState(false);
   const [isAiVerifiedOnly, setIsAiVerifiedOnly] = useState(false);
+  const [sortBy, setSortBy] = useState<'relevance' | 'distance' | 'price-asc' | 'price-desc' | 'freshness' | 'rating'>('relevance');
 
   const [viewMode, setViewMode] = useState<'grid' | 'list' | 'map'>('grid');
   const [currentPage, setCurrentPage] = useState(1);
@@ -51,6 +52,7 @@ function SearchPageContent() {
           minFreshness,
           openNowOnly: isOpenNowOnly,
           aiVerifiedOnly: isAiVerifiedOnly,
+          sortBy,
         })
         .then((res) => {
           if (isMounted) {
@@ -65,7 +67,7 @@ function SearchPageContent() {
       isMounted = false;
       clearTimeout(timer);
     };
-  }, [query, selectedCategory, maxDistance, maxPrice, minFreshness, isOpenNowOnly, isAiVerifiedOnly]);
+  }, [query, selectedCategory, maxDistance, maxPrice, minFreshness, isOpenNowOnly, isAiVerifiedOnly, sortBy]);
 
   const itemsPerPage = 8;
   const totalPages = Math.ceil(searchResults.length / itemsPerPage) || 1;
@@ -78,10 +80,11 @@ function SearchPageContent() {
     setQuery('');
     setSelectedCategory('All');
     setMaxDistance(15.0);
-    setMaxPrice(40.0);
-    setMinFreshness(80);
+    setMaxPrice(500.0);
+    setMinFreshness(85);
     setIsOpenNowOnly(false);
     setIsAiVerifiedOnly(false);
+    setSortBy('relevance');
     setCurrentPage(1);
   };
 
@@ -97,8 +100,8 @@ function SearchPageContent() {
               <Sparkles className="w-6 h-6 text-emerald-500 animate-pulse" />
               <span>Hyperlocal Produce Search</span>
             </h1>
-            <p className="text-xs text-slate-500 dark:text-slate-400 font-mono">
-              Live GPS radar & AI freshness validation connecting neighborhood markets.
+            <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
+              Fresh produce delivered from local neighborhood markets
             </p>
           </div>
 
@@ -145,23 +148,20 @@ function SearchPageContent() {
             setIsAiVerifiedOnly(val);
             setCurrentPage(1);
           }}
+          sortBy={sortBy}
+          onSortByChange={(sort) => {
+            setSortBy(sort);
+            setCurrentPage(1);
+          }}
           viewMode={viewMode}
           onViewModeChange={setViewMode}
           onResetFilters={handleResetFilters}
           totalResultsCount={searchResults.length}
         />
 
-        {/* AI Insight Explanation Banner */}
-        {aiExplanationText && (
-          <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-600 dark:text-emerald-400 text-xs font-mono flex items-center space-x-2">
-            <Sparkles className="w-4 h-4 shrink-0 animate-pulse" />
-            <span>{aiExplanationText}</span>
-          </div>
-        )}
-
         {/* Results Area */}
         {isLoading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6">
             {[1, 2, 3, 4, 5, 6, 7, 8].map((n) => (
               <SkeletonShopCard key={n} />
             ))}
@@ -178,19 +178,20 @@ function SearchPageContent() {
             onAction={handleResetFilters}
           />
         ) : (
-          /* Grid or List Product Cards */
+          /* Grid or List Product Cards (2-Column Mobile Side-by-Side) */
           <div
             className={
               viewMode === 'list'
                 ? 'space-y-4'
-                : 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6'
+                : 'grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6'
             }
           >
-            {paginatedProducts.map((product) => (
+            {paginatedProducts.map((product, index) => (
               <HyperlocalProductCard
                 key={product.id}
                 product={product}
                 viewMode={viewMode === 'list' ? 'list' : 'grid'}
+                isTopMatch={index === 0 && currentPage === 1}
               />
             ))}
           </div>

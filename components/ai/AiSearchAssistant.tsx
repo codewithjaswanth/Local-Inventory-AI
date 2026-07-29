@@ -20,6 +20,7 @@ export const AiSearchAssistant: React.FC<AiSearchAssistantProps> = ({ onSearch, 
   const [query, setQuery] = useState('');
   const [promptIndex, setPromptIndex] = useState(0);
   const [isListening, setIsListening] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
   const [searchHistory, setSearchHistory] = useState<string[]>([
     'Vine-Ripened Organic Tomatoes',
     'Tree-Ripened Hass Avocados',
@@ -85,6 +86,8 @@ export const AiSearchAssistant: React.FC<AiSearchAssistantProps> = ({ onSearch, 
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
+              onFocus={() => setIsFocused(true)}
+              onBlur={() => setTimeout(() => setIsFocused(false), 200)}
               onKeyDown={(e) => {
                 if (e.key === 'Enter') handleExecuteSearch(query);
               }}
@@ -178,8 +181,15 @@ export const AiSearchAssistant: React.FC<AiSearchAssistantProps> = ({ onSearch, 
         )}
       </AnimatePresence>
 
-      {/* Suggested AI Prompts, Trending, and History Chips */}
-      <div className="space-y-4 pt-1 text-xs select-none">
+      {/* Suggested AI Prompts, Trending, and History Chips - Hidden by default */}
+      <AnimatePresence>
+        {isFocused && (
+          <motion.div
+            initial={{ opacity: 0, y: -10, height: 0 }}
+            animate={{ opacity: 1, y: 0, height: 'auto' }}
+            exit={{ opacity: 0, y: -10, height: 0 }}
+            className="space-y-4 pt-1 text-xs select-none overflow-hidden"
+          >
         {/* Suggested AI Prompts */}
         <div className="space-y-2">
           <span className="text-xs font-bold text-slate-400 flex items-center space-x-1.5">
@@ -253,7 +263,9 @@ export const AiSearchAssistant: React.FC<AiSearchAssistantProps> = ({ onSearch, 
             </div>
           </div>
         )}
-      </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

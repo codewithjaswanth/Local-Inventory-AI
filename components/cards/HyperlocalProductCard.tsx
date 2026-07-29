@@ -2,21 +2,24 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Sparkles, MapPin, Star, ShieldCheck, Clock, ArrowRight, Store } from 'lucide-react';
+import { Sparkles, MapPin, Star, ShieldCheck, Store, ArrowRight } from 'lucide-react';
 import { SearchProduct } from '@/data/searchProducts';
-import { GetDirectionsButton } from '../navigation/GetDirectionsButton';
 
 interface HyperlocalProductCardProps {
   product: SearchProduct;
   viewMode?: 'grid' | 'list';
+  isTopMatch?: boolean;
 }
 
 export const HyperlocalProductCard: React.FC<HyperlocalProductCardProps> = ({
   product,
-  viewMode = 'grid'
+  viewMode = 'grid',
+  isTopMatch = false,
 }) => {
-  const isListView = viewMode === 'list';
   const isOpen = product.isOpen !== false;
+  const rawUnit = product.unit || 'each';
+  const cleanUnit = rawUnit.toLowerCase().endsWith('s') && rawUnit.toLowerCase() !== 'glass' ? rawUnit.slice(0, -1) : rawUnit;
+  const shopHref = `/shop/${product.shopId || 'shop-1'}`;
 
   return (
     <motion.div
@@ -26,113 +29,96 @@ export const HyperlocalProductCard: React.FC<HyperlocalProductCardProps> = ({
       transition={{ duration: 0.2 }}
       className="h-full"
     >
-      <div className="group bg-[#090F1D] border border-slate-800/80 rounded-3xl p-4 sm:p-5 flex flex-col justify-between h-full hover:border-slate-700 transition-all shadow-xl relative overflow-hidden">
+      <a
+        href={shopHref}
+        className="group bg-[#090F1D] border border-slate-800/80 rounded-3xl p-3 sm:p-4 flex flex-col justify-between h-full hover:border-emerald-500/40 transition-all shadow-xl relative overflow-hidden block cursor-pointer"
+      >
         <div>
-          {/* Product Image & Badges */}
-          <div className="relative h-44 sm:h-48 w-full rounded-2xl overflow-hidden bg-slate-900 border border-slate-800 shrink-0">
+          {/* Product Image & Badges Overlay */}
+          <div className="relative h-36 sm:h-44 w-full rounded-2xl overflow-hidden bg-slate-900 border border-slate-800/80 shrink-0">
             <img
               src={product.image}
               alt={product.name}
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#090F1D] via-transparent to-transparent opacity-80" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#090F1D]/80 via-transparent to-transparent" />
 
-            {/* Badges Overlay */}
-            <div className="absolute top-3 left-3 right-3 flex items-center justify-between pointer-events-none">
-              <span className="px-2.5 py-1 rounded-full bg-emerald-500/90 backdrop-blur-md text-slate-950 text-[10px] font-extrabold flex items-center shadow-lg">
-                <Sparkles className="w-3 h-3 mr-1" />
-                {product.freshnessScore}% Fresh
-              </span>
+            {/* AI Top Match Badge */}
+            {isTopMatch && (
+              <div className="absolute top-2 left-2 z-10">
+                <span className="px-2.5 py-1 rounded-full bg-gradient-to-r from-emerald-500 via-teal-500 to-indigo-500 text-slate-950 font-extrabold text-[10px] sm:text-xs shadow-lg flex items-center gap-1 animate-pulse">
+                  <span>✨ AI Top Match</span>
+                </span>
+              </div>
+            )}
 
-              <span
-                className={`px-2.5 py-1 rounded-full text-[10px] font-extrabold backdrop-blur-md ${
-                  isOpen
-                    ? 'bg-slate-900/80 text-emerald-400 border border-emerald-500/30'
-                    : 'bg-slate-900/80 text-slate-400 border border-slate-700'
-                }`}
-              >
-                {isOpen ? 'Open Now' : 'Closed'}
-              </span>
-            </div>
-          </div>
+            {/* Freshness Badge */}
+            {!isTopMatch && (
+              <div className="absolute top-2 left-2 z-10">
+                <span className="px-2 py-0.5 rounded-full bg-emerald-500/90 backdrop-blur-md text-slate-950 text-[10px] font-extrabold flex items-center shadow-md">
+                  <Sparkles className="w-2.5 h-2.5 mr-1" />
+                  {product.freshnessScore}% Fresh
+                </span>
+              </div>
+            )}
 
-          {/* Product Info */}
-          <div className="mt-3.5 space-y-1.5">
-            <div className="flex items-center justify-between">
-              <span className="px-2.5 py-0.5 rounded-full bg-slate-900 text-slate-300 border border-slate-800 text-[10px] font-bold">
-                {product.category}
-              </span>
+            {/* Status / Verified Badge */}
+            <div className="absolute top-2 right-2 z-10 flex items-center gap-1">
               {product.verifiedByAi && (
-                <span className="text-[10px] text-emerald-400 font-bold flex items-center gap-1">
-                  <ShieldCheck className="w-3.5 h-3.5" /> AI Verified
+                <span className="p-1 rounded-full bg-emerald-500/90 text-slate-950 shadow-md" title="AI Verified">
+                  <ShieldCheck className="w-3 h-3" />
                 </span>
               )}
             </div>
+          </div>
 
-            <h3 className="font-extrabold text-white text-base truncate group-hover:text-emerald-400 transition-colors">
+          {/* Product Meta */}
+          <div className="mt-3 space-y-1">
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-wider">
+                {product.category}
+              </span>
+              <span className="text-[10px] text-amber-400 font-bold flex items-center gap-0.5">
+                <Star className="w-3 h-3 fill-current" />
+                {product.shopRating}
+              </span>
+            </div>
+
+            <h3 className="font-extrabold text-white text-sm sm:text-base truncate group-hover:text-emerald-400 transition-colors">
               {product.name}
             </h3>
 
-            {/* Shop Information Bar */}
-            <a
-              href={`/shop/${product.shopId || 'shop-1'}`}
-              className="flex items-center justify-between pt-1 group/shop"
-            >
-              <div className="flex items-center space-x-1.5 truncate">
-                <Store className="w-3.5 h-3.5 text-slate-400 shrink-0 group-hover/shop:text-emerald-400 transition-colors" />
-                <span className="text-xs font-bold text-slate-300 truncate group-hover/shop:text-white transition-colors">
-                  {product.shopName}
-                </span>
-              </div>
-
-              <div className="flex items-center space-x-2 shrink-0 text-[11px] text-slate-500 dark:text-slate-400 font-medium">
-                <span className="flex items-center text-amber-500 font-bold">
-                  <Star className="w-3 h-3 fill-current mr-0.5" />
-                  {product.shopRating}
-                </span>
-                <span>•</span>
-                <span className="flex items-center text-slate-400">
-                  <MapPin className="w-3 h-3 mr-0.5 text-emerald-400" />
-                  {product.distance} km
-                </span>
-              </div>
-            </a>
+            {/* Shop Name & Distance */}
+            <div className="flex items-center justify-between text-xs text-slate-400 pt-0.5">
+              <span className="truncate max-w-[120px] sm:max-w-[160px] font-medium group-hover:text-slate-200 transition-colors flex items-center gap-1">
+                <Store className="w-3 h-3 shrink-0 text-slate-500" />
+                <span className="truncate">{product.shopName}</span>
+              </span>
+              <span className="shrink-0 text-[11px] font-semibold text-slate-400 flex items-center gap-0.5">
+                <MapPin className="w-3 h-3 text-emerald-400" />
+                {product.distance} km
+              </span>
+            </div>
           </div>
         </div>
 
-        {/* Price & Stock & Action Footer */}
-        <div className="pt-3.5 border-t border-slate-800/80 mt-3 space-y-3">
-          <div className="flex items-center justify-between">
-            <div className="text-lg font-extrabold text-emerald-400 leading-none">
+        {/* Price & Action */}
+        <div className="pt-3 border-t border-slate-800/80 mt-3 flex items-center justify-between">
+          <div>
+            <div className="text-base sm:text-lg font-extrabold text-emerald-400 leading-none">
               ₹{typeof product.price === 'number' ? (product.price % 1 === 0 ? product.price : product.price.toFixed(2)) : product.price}
-              <span className="text-xs font-normal text-slate-400 font-sans"> / {product.unit}</span>
+              <span className="text-[11px] font-normal text-slate-400 font-sans"> / {cleanUnit}</span>
             </div>
-            <div className="text-[10px] text-slate-400 font-medium">
-              Stock: <strong className="text-white font-bold">{product.availableQty} {product.unit}s</strong>
-            </div>
+            <p className="text-[10px] text-slate-400 mt-0.5 font-medium">
+              {product.availableQty} in stock
+            </p>
           </div>
 
-          <div className="grid grid-cols-2 gap-2">
-            <a
-              href={`/shop/${product.shopId || 'shop-1'}`}
-              className="px-3 py-2 rounded-2xl bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-300 font-bold text-xs flex items-center justify-center space-x-1 transition-all"
-            >
-              <span>View Shop</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </a>
-            <GetDirectionsButton
-              shopName={product.shopName}
-              shopAddress={product.shopAddress}
-              nearbyLandmark={product.nearbyLandmark}
-              shopLatitude={product.shopLatitude}
-              shopLongitude={product.shopLongitude}
-              distanceKm={product.distance}
-              variant="compact"
-              label="Directions"
-            />
+          <div className="w-8 h-8 rounded-full bg-slate-900 group-hover:bg-emerald-500 text-slate-400 group-hover:text-slate-950 border border-slate-800 group-hover:border-emerald-400 flex items-center justify-center transition-all shadow-md">
+            <ArrowRight className="w-4 h-4" />
           </div>
         </div>
-      </div>
+      </a>
     </motion.div>
   );
 };

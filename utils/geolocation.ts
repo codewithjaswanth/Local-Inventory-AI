@@ -20,6 +20,81 @@ export function isValidCoordinate(lat: number | null | undefined, lng: number | 
   return lat >= -90 && lat <= 90 && lng >= -180 && lng <= 180;
 }
 
+// In-memory cache for reverse geocoding results
+const locationNameCache: Record<string, string> = {};
+
+/**
+ * Converts GPS latitude and longitude into a user-friendly city or village name.
+ * Uses BigDataCloud & OpenStreetMap Nominatim APIs with smart local region fallback.
+ */
+export async function getCityOrVillageFromCoords(lat: number, lng: number): Promise<string> {
+  if (!isValidCoordinate(lat, lng)) {
+    return 'Guntur / Vijayawada Region';
+  }
+
+  const cacheKey = `${lat.toFixed(3)},${lng.toFixed(3)}`;
+  if (locationNameCache[cacheKey]) {
+    return locationNameCache[cacheKey];
+  }
+
+  try {
+    // 1. Try BigDataCloud Free Reverse Geocode Client API (No API key required)
+    const res = await fetch(
+      `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lng}&localityLanguage=en`
+    );
+    if (res.ok) {
+      const data = await res.json();
+      const cityOrVillage =
+        data.locality ||
+        data.city ||
+        data.localityInfo?.informal?.[0]?.name ||
+        data.principalSubdivision;
+
+      if (cityOrVillage) {
+        const stateOrDistrict = data.principalSubdivision ? `, ${data.principalSubdivision}` : '';
+        const formatted = `${cityOrVillage}${stateOrDistrict}`;
+        locationNameCache[cacheKey] = formatted;
+        return formatted;
+      }
+    }
+  } catch (err) {
+    console.warn('BigDataCloud reverse geocode fallback error:', err);
+  }
+
+  try {
+    // 2. Fallback to OpenStreetMap Nominatim API
+    const res = await fetch(
+      `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`
+    );
+    if (res.ok) {
+      const data = await res.json();
+      const addr = data.address || {};
+      const place = addr.village || addr.suburb || addr.town || addr.city || addr.county;
+      if (place) {
+        const state = addr.state ? `, ${addr.state}` : '';
+        const formatted = `${place}${state}`;
+        locationNameCache[cacheKey] = formatted;
+        return formatted;
+      }
+    }
+  } catch (err) {
+    console.warn('Nominatim reverse geocode error:', err);
+  }
+
+  // 3. Fallback smart geographical estimation if offline/failed
+  let fallbackName = 'Local Region';
+  if (lat >= 16.0 && lat <= 16.7 && lng >= 80.0 && lng <= 80.8) {
+    fallbackName = 'Guntur / Tenali Region';
+  } else if (lat >= 16.4 && lat <= 16.8 && lng >= 80.5 && lng <= 81.0) {
+    fallbackName = 'Vijayawada Region';
+  } else if (lat >= 17.2 && lat <= 17.6 && lng >= 78.2 && lng <= 78.6) {
+    fallbackName = 'Hyderabad Region';
+  }
+
+  locationNameCache[cacheKey] = fallbackName;
+  return fallbackName;
+}
+
 /**
  * Retrieves the user's current GPS coordinates using the browser Geolocation API.
  */

@@ -54,39 +54,39 @@ export const PopularCategories: React.FC<PopularCategoriesProps> = ({ onCategory
           </a>
         </div>
 
-        {/* Cards Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
+        {/* Horizontal Scrollable Touch Carousel */}
+        <div className="flex items-stretch gap-4 overflow-x-auto snap-x snap-mandatory pb-4 pt-1 select-none [ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {POPULAR_CATEGORIES.map((cat, index) => (
             <motion.div
               key={cat.id}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, x: 20 }}
+              whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: index * 0.08 }}
-              whileHover={{ y: -6, transition: { duration: 0.2 } }}
+              transition={{ duration: 0.35, delay: index * 0.06 }}
+              className="snap-start shrink-0 w-[200px] sm:w-[220px]"
             >
-              <Card
+              <div
                 onClick={() => onCategorySelect(cat)}
-                className="group cursor-pointer p-6 h-full flex flex-col justify-between"
+                className="group cursor-pointer p-4 rounded-2xl bg-white dark:bg-[#090F1D] border border-slate-200/80 dark:border-slate-800 shadow-sm hover:shadow-md hover:border-emerald-500/40 transition-all h-full flex flex-col justify-between"
               >
                 <div>
-                  <div className={`w-14 h-14 rounded-2xl ${cat.accentBg} dark:bg-slate-800 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300`}>
+                  <div className={`w-12 h-12 rounded-xl ${cat.accentBg} dark:bg-slate-800/90 flex items-center justify-center mb-3.5 group-hover:scale-110 transition-transform duration-300`}>
                     {renderCategoryIcon(cat.icon)}
                   </div>
 
-                  <h3 className="text-xl font-bold text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
+                  <h3 className="text-base font-extrabold text-slate-900 dark:text-white group-hover:text-emerald-500 transition-colors">
                     {cat.name}
                   </h3>
 
-                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 font-medium">
+                  <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 font-medium">
                     {cat.itemCount.toLocaleString()} live items
                   </p>
 
-                  <div className="mt-4 flex flex-wrap gap-1.5">
+                  <div className="mt-3 flex flex-wrap gap-1">
                     {cat.popularItems.slice(0, 2).map((item) => (
                       <span
                         key={item}
-                        className="px-2 py-0.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-[11px] font-medium"
+                        className="px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800/80 text-slate-600 dark:text-slate-300 text-[10px] font-semibold"
                       >
                         {item}
                       </span>
@@ -94,11 +94,11 @@ export const PopularCategories: React.FC<PopularCategoriesProps> = ({ onCategory
                   </div>
                 </div>
 
-                <div className="mt-6 pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs font-semibold text-slate-500 dark:text-slate-400 group-hover:text-emerald-600 dark:group-hover:text-emerald-400">
-                  <span>Browse Category</span>
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-[11px] font-bold text-slate-400 group-hover:text-emerald-500 transition-colors">
+                  <span>Explore</span>
+                  <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
                 </div>
-              </Card>
+              </div>
             </motion.div>
           ))}
         </div>

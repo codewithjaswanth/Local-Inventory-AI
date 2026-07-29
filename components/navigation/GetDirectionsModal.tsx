@@ -22,6 +22,7 @@ import {
   calculateTravelTime,
   generateGoogleMapsUrl,
   getEffectiveShopCoordinates,
+  getCityOrVillageFromCoords,
   TravelMode,
   UserCoordinates
 } from '@/utils/geolocation';
@@ -48,6 +49,7 @@ export const GetDirectionsModal: React.FC<GetDirectionsModalProps> = ({
   fallbackDistanceKm = 1.2,
 }) => {
   const [userLocation, setUserLocation] = useState<UserCoordinates | null>(null);
+  const [userLocationName, setUserLocationName] = useState<string | null>(null);
   const [isLoadingGps, setIsLoadingGps] = useState<boolean>(true);
   const [gpsError, setGpsError] = useState<string | null>(null);
   const [permissionDenied, setPermissionDenied] = useState<boolean>(false);
@@ -61,12 +63,14 @@ export const GetDirectionsModal: React.FC<GetDirectionsModalProps> = ({
     setGpsError(null);
     setPermissionDenied(false);
 
-    getUserLocation(8000).then((res) => {
+    getUserLocation(8000).then(async (res) => {
       if (!isMounted) return;
 
       setIsLoadingGps(false);
       if (res.coordinates) {
         setUserLocation(res.coordinates);
+        const name = await getCityOrVillageFromCoords(res.coordinates.latitude, res.coordinates.longitude);
+        if (isMounted) setUserLocationName(name);
       } else {
         setGpsError(res.error);
         setPermissionDenied(res.permissionDenied);
@@ -169,8 +173,10 @@ export const GetDirectionsModal: React.FC<GetDirectionsModalProps> = ({
                 Customer Location:
               </span>
               <span className="text-white font-extrabold">
-                {userLocation
-                  ? `GPS Acquired (${userLocation.latitude.toFixed(3)}, ${userLocation.longitude.toFixed(3)})`
+                {userLocationName
+                  ? userLocationName
+                  : userLocation
+                  ? 'GPS Acquired'
                   : isLoadingGps
                   ? 'Detecting Location...'
                   : 'Location Permission Needed'}

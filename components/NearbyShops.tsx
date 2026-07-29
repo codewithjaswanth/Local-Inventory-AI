@@ -1,26 +1,79 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { NEARBY_SHOPS } from '@/data/mockData';
+import { supabase } from '@/lib/supabase';
 import { Shop } from '@/types';
-import { MapPin, Star, Clock, ArrowRight, ShieldCheck } from 'lucide-react';
+import { Database } from '@/types/database.types';
+import { MapPin, Star, Clock, ArrowRight, ShieldCheck, Store, RotateCcw } from 'lucide-react';
 import { Card } from './ui/Card';
 import { Badge } from './ui/Badge';
 import { Button } from './ui/Button';
 
+type DbShop = Database['public']['Tables']['shops']['Row'];
+
 interface NearbyShopsProps {
-  onSelectShop: (shop: Shop) => void;
+  onSelectShop: (shop: Shop | any) => void;
 }
 
 export const NearbyShops: React.FC<NearbyShopsProps> = ({ onSelectShop }) => {
   const [filter, setFilter] = useState<'all' | 'open' | 'top-rated'>('all');
+  
+  // 4. Add state for our real data and loading status
+  const [shops, setShops] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const filteredShops = NEARBY_SHOPS.filter((shop) => {
+  // 5. Fetch real data from Supabase on mount
+  useEffect(() => {
+    async function fetchLiveShops() {
+      const { data, error } = await supabase
+        .from('shops')
+        .select('*');
+
+      if (error) {
+        console.error('Error fetching shops:', error.message);
+        setLoading(false);
+        return;
+      }
+
+      if (data) {
+        // Map the database row to match your UI's expected shape
+        const formattedShops = data.map((shop: DbShop) => ({
+          id: shop.id,
+          name: shop.shop_name,
+          category: shop.category || 'General',
+          rating: shop.rating,
+          address: shop.address,
+          // Temporary UI fallbacks for fields not yet in DB
+          isOpen: true, 
+          image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80&w=800', // Placeholder
+          distance: '1.2m',
+          openTime: shop.opening_time ? `${shop.opening_time} - ${shop.closing_time}` : '9:00 AM - 9:00 PM',
+          freshnessBadge: 'High Freshness',
+          reviewsCount: 12,
+          inventoryCount: 24,
+          verifiedItems: []
+        }));
+        
+        setShops(formattedShops);
+      }
+      setLoading(false);
+    }
+
+    fetchLiveShops();
+  }, []);
+
+  // 6. Update the filter to use our new `shops` state instead of `NEARBY_SHOPS`
+  const filteredShops = shops.filter((shop) => {
     if (filter === 'open') return shop.isOpen;
     if (filter === 'top-rated') return shop.rating >= 4.8;
     return true;
   });
+
+  // Optional: Add a loading state to your UI before the return statement
+  if (loading) {
+    return <div className="py-24 text-center">Loading live local inventory...</div>;
+  }
 
   return (
     <section id="shops" aria-label="Nearby Shops Section" className="py-24 bg-transparent relative transition-colors">
@@ -50,7 +103,7 @@ export const NearbyShops: React.FC<NearbyShopsProps> = ({ onSelectShop }) => {
                   : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
               }`}
             >
-              All Shops ({NEARBY_SHOPS.length})
+              All Shops ({shops.length})
             </button>
             <button
               onClick={() => setFilter('open')}
@@ -75,9 +128,35 @@ export const NearbyShops: React.FC<NearbyShopsProps> = ({ onSelectShop }) => {
           </div>
         </div>
 
-        {/* Shop Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredShops.map((shop, index) => (
+        {/* Empty State vs Shop Cards Grid */}
+        {filteredShops.length === 0 ? (
+          <div className="py-16 text-center max-w-md mx-auto space-y-4 bg-white/50 dark:bg-slate-900/50 p-8 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-sm">
+            <div className="w-16 h-16 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mx-auto text-emerald-500">
+              <Store className="w-8 h-8 opacity-70" />
+            </div>
+            <div className="space-y-1">
+              <h3 className="text-lg font-bold text-slate-900 dark:text-white">
+                No shops found in this area yet
+              </h3>
+              <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+                We couldn't locate any nearby stores matching your current filter criteria. Try changing your filters or refreshing your location.
+              </p>
+            </div>
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => {
+                setFilter('all');
+                window.location.reload();
+              }}
+              leftIcon={<RotateCcw className="w-3.5 h-3.5 text-emerald-500" />}
+            >
+              Refresh Location
+            </Button>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {filteredShops.map((shop, index) => (
             <motion.div
               key={shop.id}
               initial={{ opacity: 0, y: 25 }}
@@ -154,7 +233,7 @@ export const NearbyShops: React.FC<NearbyShopsProps> = ({ onSelectShop }) => {
                       </div>
 
                       <div className="flex flex-wrap gap-1.5">
-                        {shop.verifiedItems.slice(0, 3).map((item) => (
+                        {shop.verifiedItems?.slice(0, 3).map((item: any) => (
                           <span
                             key={item.id}
                             className="px-2.5 py-1 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700/60 text-slate-700 dark:text-slate-300 text-xs font-medium flex items-center space-x-1"
@@ -184,6 +263,7 @@ export const NearbyShops: React.FC<NearbyShopsProps> = ({ onSelectShop }) => {
             </motion.div>
           ))}
         </div>
+        )}
       </div>
     </section>
   );

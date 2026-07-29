@@ -46,6 +46,7 @@ export const metadata: Metadata = {
 
 import { AuthProvider } from "@/context/AuthContext";
 import { AmbientBackground } from "@/components/ui/AmbientBackground";
+import { MobileBottomNav } from "@/components/layout/MobileBottomNav";
 
 export default function RootLayout({
   children,
@@ -58,7 +59,8 @@ export default function RootLayout({
       <body suppressHydrationWarning className="antialiased bg-slate-50 dark:bg-[#040810] text-slate-900 dark:text-slate-100 overflow-x-hidden min-h-screen relative">
         <AuthProvider>
           <AmbientBackground />
-          <div className="relative z-10">{children}</div>
+          <div className="relative z-10 pb-16 md:pb-0">{children}</div>
+          <MobileBottomNav />
         </AuthProvider>
       </body>
     </html>

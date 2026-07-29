@@ -63,14 +63,16 @@ export default function Home() {
       {/* 2. Hero Section */}
       <Hero onSearchSubmit={handleHeroSearch} />
 
-      {/* 3. Popular Categories */}
-      <PopularCategories onCategorySelect={handleCategorySelect} />
+      <div className="pt-8 sm:pt-16 pb-8 space-y-12">
+        {/* 3. Popular Categories */}
+        <PopularCategories onCategorySelect={handleCategorySelect} />
 
-      {/* 4. Nearby Shops Section */}
-      <NearbyShops onSelectShop={(shop) => setSelectedShop(shop)} />
+        {/* 4. Nearby Shops Section */}
+        <NearbyShops onSelectShop={(shop) => setSelectedShop(shop)} />
+      </div>
 
-      {/* 5. AI Features Section (Lazy Loaded) */}
-      <AiFeatures />
+      {/* 5. AI Features Section (Lazy Loaded) - Disabled for B2C consumer view */}
+      {/* <AiFeatures /> */}
 
       {/* 6. How It Works Timeline (Lazy Loaded) */}
       <HowItWorks />

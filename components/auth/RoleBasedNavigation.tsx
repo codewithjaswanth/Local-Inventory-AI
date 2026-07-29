@@ -27,24 +27,18 @@ export const RoleBasedNavigation: React.FC<{
       { name: 'AI Monitor', href: '/admin/ai-monitor' },
       { name: 'Reports', href: '/admin/reports' },
       { name: 'Audit Logs', href: '/admin/audit-logs' },
-      { name: 'Settings', href: '/admin/settings' },
-      { name: 'Profile', href: '/profile' },
     ];
   } else if (isShopkeeper) {
     navItems = [
       { name: 'Home', href: '/' },
       { name: 'Search', href: '/search' },
       { name: 'Dashboard', href: '/dashboard' },
-      { name: 'Profile', href: '/profile' },
-      { name: 'Settings', href: '/settings' },
     ];
   } else if (isCustomer) {
     navItems = [
       { name: 'Home', href: '/' },
       { name: 'AI Search', href: '/search' },
       { name: 'Marketplace', href: '/marketplace' },
-      { name: 'Profile', href: '/profile' },
-      { name: 'Settings', href: '/settings' },
     ];
   } else {
     // Unauthenticated user

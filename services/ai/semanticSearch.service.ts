@@ -11,6 +11,7 @@ export interface HyperlocalSearchFilters {
   minRating?: number;
   openNowOnly?: boolean;
   aiVerifiedOnly?: boolean;
+  sortBy?: 'relevance' | 'distance' | 'price-asc' | 'price-desc' | 'freshness' | 'rating';
 }
 
 export interface SemanticSearchResult {
@@ -19,6 +20,29 @@ export interface SemanticSearchResult {
   detectedLanguage: string;
   similarityScore: number;
   queryEmbeddingDim: number;
+}
+
+export function sortSearchProducts(products: SearchProduct[], sortBy?: string): SearchProduct[] {
+  const list = [...products];
+  return list.sort((a, b) => {
+    switch (sortBy) {
+      case 'distance':
+        return (a.distance || 0) - (b.distance || 0);
+      case 'price-asc':
+        return (a.price || 0) - (b.price || 0);
+      case 'price-desc':
+        return (b.price || 0) - (a.price || 0);
+      case 'freshness':
+        return (b.freshnessScore || 0) - (a.freshnessScore || 0);
+      case 'rating':
+        return (b.shopRating || 0) - (a.shopRating || 0);
+      case 'relevance':
+      default:
+        const scoreA = (a.freshnessScore || 80) / ((a.distance || 1) + 0.5);
+        const scoreB = (b.freshnessScore || 80) / ((b.distance || 1) + 0.5);
+        return scoreB - scoreA;
+    }
+  });
 }
 
 export const semanticSearchService = {
@@ -88,11 +112,14 @@ export const semanticSearchService = {
             }
           }
 
+          // Sort products according to filters.sortBy
+          products = sortSearchProducts(products, filters?.sortBy);
+
           const top = products[0] || data[0];
           const aiExplanation = `${top?.shopName || 'Green Earth Organics'} ranked #1 because it is ${top?.distance || 0.3} miles away, updated inventory 12 minutes ago via WhatsApp, with a ${top?.freshnessScore || 98}% AI freshness score and 96% availability confidence.`;
 
           return {
-            products: products.length > 0 ? products : SEARCH_PRODUCTS,
+            products: products.length > 0 ? products : sortSearchProducts(SEARCH_PRODUCTS, filters?.sortBy),
             aiExplanation,
             detectedLanguage: originalLanguage,
             similarityScore: top?.similarity || 0.96,
@@ -127,7 +154,8 @@ export const semanticSearchService = {
       return true;
     });
 
-    const products = filtered.length > 0 ? filtered : SEARCH_PRODUCTS;
+    let products = filtered.length > 0 ? filtered : SEARCH_PRODUCTS;
+    products = sortSearchProducts(products, filters?.sortBy);
     const top = products[0];
 
     const aiExplanation = `${top.shopName} ranked #1 because it is ${top.distance} miles away, updated inventory 12 minutes ago via WhatsApp, with a ${top.freshnessScore}% AI freshness score and 96% availability confidence.`;
