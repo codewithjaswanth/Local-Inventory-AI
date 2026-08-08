@@ -52,7 +52,7 @@ export const InventoryTable: React.FC<InventoryTableProps> = ({
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
 
-  const categories = ['All', 'Vegetables', 'Fruits', 'Dairy & Eggs', 'Bakery', 'Pantry'];
+  const categories = ['All', 'Toys & Games', 'Hardware & Tools', 'Party Supplies', 'Pet Care', 'Gardening', 'Beauty & Cosmetics', 'Baby Care', 'Auto Accessories', 'Pooja Essentials', 'Sewing & Crafts', 'Travel Accessories', 'Footwear Care'];
 
   const filteredProducts = products.filter((p) => {
     const matchesSearch =
@@ -70,12 +70,12 @@ export const InventoryTable: React.FC<InventoryTableProps> = ({
   );
 
   return (
-    <div className="bg-[#090F1D] rounded-3xl border border-slate-800/80 shadow-2xl p-5 sm:p-6 space-y-5 overflow-hidden">
+    <div className="bg-white dark:bg-[#090F1D] rounded-3xl border border-slate-200/80 dark:border-slate-800/80 shadow-xl dark:shadow-2xl p-5 sm:p-6 space-y-5 overflow-hidden transition-colors">
       {/* Header Bar & Search/Filter Controls */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-slate-800/80 pb-5">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800/80 pb-5">
         <div>
-          <h2 className="text-lg font-extrabold text-white tracking-tight flex items-center space-x-2">
-            <Boxes className="w-5 h-5 text-emerald-400" />
+          <h2 className="text-lg font-extrabold text-slate-900 dark:text-white tracking-tight flex items-center space-x-2">
+            <Boxes className="w-5 h-5 text-emerald-500 dark:text-emerald-400" />
             <span>Active Produce Catalog</span>
             <span className="text-xs font-normal text-emerald-400 bg-emerald-500/10 px-2.5 py-0.5 rounded-full border border-emerald-500/20">
               {filteredProducts.length} Items
@@ -181,6 +181,9 @@ export const InventoryTable: React.FC<InventoryTableProps> = ({
                         src={p.image}
                         alt={p.name}
                         className="w-10 h-10 rounded-xl object-cover border border-slate-800 shrink-0 group-hover:scale-105 transition-transform"
+                        onError={(e) => {
+                          e.currentTarget.src = 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=200&q=80';
+                        }}
                       />
                       <div>
                         <span className="font-extrabold text-white text-sm block truncate max-w-[180px] sm:max-w-xs">

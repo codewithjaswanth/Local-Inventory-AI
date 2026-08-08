@@ -56,11 +56,11 @@ export default function ProductDetailsPage({ params }: PageProps) {
         {/* Breadcrumb Back */}
         <div>
           <a
-            href="/search"
+            href="/"
             className="inline-flex items-center space-x-2 text-xs font-bold text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
-            <span>Back to Search Results</span>
+            <span>Back to Home</span>
           </a>
         </div>
 

@@ -214,12 +214,12 @@ export const InventoryManager: React.FC<InventoryManagerProps> = ({ shopId = 'sh
       />
 
       {/* Main Inventory Manager Container */}
-      <div className="bg-[#090F1D] rounded-3xl border border-slate-800/80 shadow-2xl p-5 sm:p-6 space-y-5 overflow-hidden">
+      <div className="bg-white dark:bg-[#090F1D] rounded-3xl border border-slate-200/80 dark:border-slate-800/80 shadow-xl dark:shadow-2xl p-5 sm:p-6 space-y-5 overflow-hidden transition-colors">
         {/* Top Action & Search Bar */}
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-slate-800/80 pb-5">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800/80 pb-5">
           <div>
-            <h2 className="text-lg font-extrabold text-white tracking-tight flex items-center space-x-2">
-              <Boxes className="w-5 h-5 text-emerald-400" />
+            <h2 className="text-lg font-extrabold text-slate-900 dark:text-white tracking-tight flex items-center space-x-2">
+              <Boxes className="w-5 h-5 text-emerald-500 dark:text-emerald-400" />
               <span>Supabase Inventory Module</span>
               <span className="text-xs font-normal text-emerald-400 bg-emerald-500/10 px-2.5 py-0.5 rounded-full border border-emerald-500/20">
                 {processedItems.length} Matched

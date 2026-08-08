@@ -1,5 +1,9 @@
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
+import { AuthProvider } from "@/context/AuthContext";
+import { AmbientBackground } from "@/components/ui/AmbientBackground";
+import { MobileBottomNav } from "@/components/layout/MobileBottomNav";
+import { AdminRedirectGuard } from "@/components/auth/AdminRedirectGuard";
 import "./globals.css";
 
 const inter = Inter({
@@ -44,24 +48,31 @@ export const metadata: Metadata = {
   },
 };
 
-import { AuthProvider } from "@/context/AuthContext";
-import { AmbientBackground } from "@/components/ui/AmbientBackground";
-import { MobileBottomNav } from "@/components/layout/MobileBottomNav";
+import { CartProvider } from "@/context/CartContext";
+import { CartDrawer } from "@/components/CartDrawer";
+import { ThemeProvider } from "@/components/theme-provider";
 
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  console.log('[BOOT] App RootLayout rendered');
   return (
     <html lang="en" suppressHydrationWarning className={`${inter.variable} scroll-smooth`}>
-      <body suppressHydrationWarning className="antialiased bg-slate-50 dark:bg-[#040810] text-slate-900 dark:text-slate-100 overflow-x-hidden min-h-screen relative">
-        <AuthProvider>
-          <AmbientBackground />
-          <div className="relative z-10 pb-16 md:pb-0">{children}</div>
-          <MobileBottomNav />
-        </AuthProvider>
+      <head />
+      <body suppressHydrationWarning className="bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-50 antialiased selection:bg-emerald-500/30 selection:text-emerald-900 dark:selection:text-emerald-100 transition-colors duration-300 min-h-screen relative overflow-x-hidden">
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem={true}>
+          <AuthProvider>
+            <CartProvider>
+              <AdminRedirectGuard>
+                <AmbientBackground />
+                <div className="relative z-10 pb-16 md:pb-0">{children}</div>
+                <CartDrawer />
+                <MobileBottomNav />
+              </AdminRedirectGuard>
+            </CartProvider>
+          </AuthProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

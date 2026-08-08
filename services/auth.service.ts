@@ -18,6 +18,54 @@ export interface AuthProfile {
   email?: string;
 }
 
+// Schema-resilient helper for writing to public.profiles table
+const safeUpsertProfile = async (payload: { id: string; name?: string; role: UserRole; phone?: string | null }) => {
+  if (!isSupabaseConfigured) return;
+
+  try {
+    // 1. Try standard 'name' column
+    const { error } = await (supabase.from('profiles') as any).upsert(
+      {
+        id: payload.id,
+        name: payload.name,
+        role: payload.role,
+        phone: payload.phone || null,
+      },
+      { onConflict: 'id' }
+    );
+
+    // 2. Fallback to 'full_name' column if 'name' column doesn't exist in Supabase schema cache
+    if (error && error.message?.includes("'name' column")) {
+      console.log('[authService] Schema note: retrying profile row write with full_name column...');
+      const { error: retryError } = await (supabase.from('profiles') as any).upsert(
+        {
+          id: payload.id,
+          full_name: payload.name,
+          role: payload.role,
+          phone: payload.phone || null,
+        },
+        { onConflict: 'id' }
+      );
+
+      if (retryError && retryError.message?.includes("'full_name' column")) {
+        // 3. Fallback to minimal payload (id, role, phone) if no name columns exist on profiles table
+        await (supabase.from('profiles') as any).upsert(
+          {
+            id: payload.id,
+            role: payload.role,
+            phone: payload.phone || null,
+          },
+          { onConflict: 'id' }
+        );
+      }
+    } else if (error) {
+      console.warn('[authService] Profile write notice:', error.message);
+    }
+  } catch (err: any) {
+    console.warn('[authService] Unexpected profile write exception:', err?.message || err);
+  }
+};
+
 export const authService = {
   // Centralized method to resolve user profile from DB with metadata & localStorage fallback
   getProfile: async (
@@ -75,6 +123,8 @@ export const authService = {
 
       if (!error && profile) {
         const existingRole = normalizeRole(profile.role);
+        const profileName = profile.name || profile.full_name || profile.display_name || fallbackName;
+
         // If user requested a specific role on login form or email pattern indicates non-customer role, update DB!
         const targetRole = requestedRole
           ? normalizeRole(requestedRole)
@@ -84,9 +134,9 @@ export const authService = {
 
         if (targetRole !== existingRole) {
           console.log(`[authService] Upgrading profile role in DB for ${email} from ${existingRole} to ${targetRole}`);
-          await (supabase.from('profiles') as any).upsert({
+          await safeUpsertProfile({
             id: userId,
-            name: profile.name || fallbackName,
+            name: profileName,
             role: targetRole,
             phone: profile.phone || fallbackPhone,
           });
@@ -98,23 +148,36 @@ export const authService = {
 
         return {
           id: profile.id,
-          name: profile.name || fallbackName,
+          name: profileName,
           role: targetRole,
           phone: profile.phone || fallbackPhone,
           email: email,
         };
       } else {
-        // Create missing profile in DB with resolved role
-        console.log(`[authService] Creating profile in DB for ${email} with role: ${finalRole}`);
-        await (supabase.from('profiles') as any).upsert({
-          id: userId,
-          name: fallbackName,
-          role: finalRole,
-          phone: fallbackPhone,
-        });
+        // Pre-check if profile row already exists before creation
+        try {
+          const { data: existingCheck } = await (supabase.from('profiles') as any)
+            .select('id')
+            .eq('id', userId)
+            .maybeSingle();
+
+          if (!existingCheck) {
+            console.log(`[authService] Creating profile in DB for ${email} with role: ${finalRole}`);
+            await safeUpsertProfile({
+              id: userId,
+              name: fallbackName,
+              role: finalRole,
+              phone: fallbackPhone,
+            });
+          } else {
+            console.log(`[authService] Profile already exists in DB for ${email}, skipping creation.`);
+          }
+        } catch (err: any) {
+          console.error('[authService] Exception checking/creating profile in DB:', err?.message || err);
+        }
       }
-    } catch (err) {
-      console.warn('[authService] Profile DB query warning:', err);
+    } catch (err: any) {
+      console.warn('[authService] Profile DB query warning:', err?.message || err);
     }
 
     return {
@@ -159,18 +222,12 @@ export const authService = {
       }
 
       console.log('[authService] Creating Profile in public.profiles for user:', data.user.id);
-
-      // Insert profile row into public.profiles
-      const { error: profileError } = await (supabase.from('profiles') as any).upsert({
+      await safeUpsertProfile({
         id: data.user.id,
         name,
         role,
         phone: phone || null,
       });
-
-      if (profileError) {
-        console.error('[authService] Profile row insert error:', profileError.message);
-      }
 
       // Immediately sign out to require manual login
       console.log('[authService] Signing out newly created user to require manual login...');

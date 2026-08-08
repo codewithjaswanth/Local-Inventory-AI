@@ -95,7 +95,7 @@ export const ShopkeeperDashboard: React.FC = () => {
   const outOfStockCount = products.filter((p) => p.status === 'Out of Stock').length;
 
   return (
-    <div className="min-h-screen bg-[#040810] text-slate-100 flex overflow-hidden font-sans selection:bg-emerald-500/30">
+    <div className="min-h-screen bg-slate-50 dark:bg-[#040810] text-slate-900 dark:text-slate-100 flex overflow-hidden font-sans selection:bg-emerald-500/30 transition-colors duration-200">
       {/* Sidebar Navigation */}
       <ShopPortalSidebar activePath={`/dashboard`} />
 

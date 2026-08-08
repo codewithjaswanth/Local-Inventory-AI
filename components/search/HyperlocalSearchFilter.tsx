@@ -62,7 +62,7 @@ export const HyperlocalSearchFilter: React.FC<HyperlocalSearchFilterProps> = ({
   totalResultsCount
 }) => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const categories = ['All', 'Vegetables', 'Fruits', 'Dairy', 'Bakery', 'Groceries'];
+  const categories = ['All', 'Toys & Games', 'Hardware & Tools', 'Party Supplies', 'Pet Care', 'Gardening', 'Beauty & Cosmetics', 'Baby Care', 'Auto Accessories', 'Pooja Essentials', 'Sewing & Crafts', 'Travel Accessories', 'Footwear Care'];
 
   const activeFiltersCount =
     (isOpenNowOnly ? 1 : 0) +
@@ -77,7 +77,7 @@ export const HyperlocalSearchFilter: React.FC<HyperlocalSearchFilterProps> = ({
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
         {/* Main Search Input */}
         <div className="relative flex-1">
-          <Search className="w-4 h-4 text-slate-500 absolute left-4 top-3.5" />
+          <Search className="w-4 h-4 text-emerald-500 dark:text-emerald-400 absolute left-4 top-3.5 pointer-events-none" />
           <input
             type="text"
             placeholder="Search fresh produce or shops..."

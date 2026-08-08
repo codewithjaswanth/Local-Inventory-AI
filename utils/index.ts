@@ -20,3 +20,18 @@ export function formatDistance(miles: number): string {
 export function formatFreshnessBadge(score: number): string {
   return `${score}% AI Verified`;
 }
+
+/**
+ * Converts a name string to nominative (title) case (e.g. "bhaskar" -> "Bhaskar").
+ * Fallback to "Bhaskar" for generic admin role titles.
+ */
+export function toNominativeCase(name?: string): string {
+  if (!name || ['admin', 'administrator', 'user', 'super admin', ''].includes(name.trim().toLowerCase())) {
+    return 'Bhaskar';
+  }
+  return name
+    .trim()
+    .split(/\s+/)
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(' ');
+}

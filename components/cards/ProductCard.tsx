@@ -24,11 +24,14 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelectShop 
     >
       <Card className="group overflow-hidden flex flex-col justify-between h-full">
         <div>
-          <div className="relative h-44 w-full bg-slate-100 dark:bg-slate-800 overflow-hidden">
+          <div className="relative w-full h-48 bg-slate-100 dark:bg-slate-800 overflow-hidden">
             <img
               src={product.image}
               alt={product.name}
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              className="w-full h-full object-cover rounded-t-lg group-hover:scale-105 transition-transform duration-300"
+              onError={(e) => {
+                e.currentTarget.src = 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=600&q=80';
+              }}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-transparent to-transparent" />
 

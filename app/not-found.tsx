@@ -30,11 +30,6 @@ export default function NotFound() {
               Back to Home
             </Button>
           </a>
-          <a href="/search">
-            <Button variant="secondary" size="md" leftIcon={<Search className="w-4 h-4" />}>
-              Search Marketplace
-            </Button>
-          </a>
         </div>
       </div>
 

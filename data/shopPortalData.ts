@@ -182,7 +182,7 @@ export const PORTAL_NOTIFICATIONS: PortalNotification[] = [
   {
     id: 'n-3',
     title: 'High Customer Search Volume',
-    message: 'Organic Vine Tomatoes are trending in your 2-km radius (420 searches today).',
+    message: 'Slim Fit Linen Shirts are trending in your 2-km radius (420 searches today).',
     type: 'alert',
     timestamp: '1h ago',
     read: true,

@@ -68,14 +68,14 @@ export const DashboardNavbar: React.FC<DashboardNavbarProps> = ({
   ];
 
   return (
-    <header className="h-20 bg-[#060B14]/90 backdrop-blur-2xl border-b border-slate-800/80 px-4 sm:px-8 flex items-center justify-between sticky top-0 z-40 select-none">
+    <header className="h-20 bg-white/90 dark:bg-[#060B14]/90 backdrop-blur-2xl border-b border-slate-200 dark:border-slate-800/80 px-4 sm:px-8 flex items-center justify-between sticky top-0 z-40 select-none transition-colors">
       {/* Left: Mobile Menu Button & Brand Header */}
       <div className="flex items-center space-x-4">
         {onOpenMobileMenu && (
           <button
             type="button"
             onClick={onOpenMobileMenu}
-            className="lg:hidden p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-900 border border-slate-800 transition-colors"
+            className="lg:hidden p-2 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-900 border border-slate-200 dark:border-slate-800 transition-colors"
             aria-label="Open sidebar"
           >
             <Menu className="w-5 h-5" />

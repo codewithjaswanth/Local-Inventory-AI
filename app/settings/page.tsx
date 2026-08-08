@@ -31,15 +31,15 @@ function ShopSettingsPageContent() {
   };
 
   return (
-    <div className="min-h-screen bg-[#060B14] text-slate-100 flex overflow-hidden selection:bg-emerald-500/30">
+    <div className="min-h-screen bg-slate-50 dark:bg-[#060B14] text-slate-900 dark:text-slate-100 flex overflow-hidden selection:bg-emerald-500/30 transition-colors">
       <ShopPortalSidebar activePath="/settings" />
 
       <div className="flex-1 flex flex-col min-w-0 overflow-y-auto">
-        <header className="h-16 bg-[#060B14]/90 backdrop-blur-xl border-b border-slate-800/80 px-6 flex items-center justify-between sticky top-0 z-30">
-          <div className="flex items-center space-x-2 text-xs font-mono font-semibold text-slate-400">
+        <header className="h-16 bg-white/90 dark:bg-[#060B14]/90 backdrop-blur-xl border-b border-slate-200 dark:border-slate-800/80 px-6 flex items-center justify-between sticky top-0 z-30 transition-colors">
+          <div className="flex items-center space-x-2 text-xs font-mono font-semibold text-slate-500 dark:text-slate-400">
             <span>Shop Portal</span>
             <ChevronRight className="w-3.5 h-3.5" />
-            <span className="text-white font-bold">Portal & Automation Settings</span>
+            <span className="text-slate-900 dark:text-white font-bold">Portal & Automation Settings</span>
           </div>
         </header>
 
@@ -51,32 +51,32 @@ function ShopSettingsPageContent() {
             badgeText="AUTOMATION ENGINE"
           />
 
-          <form onSubmit={handleSave} className="bg-[#111827] p-6 sm:p-8 rounded-3xl border border-slate-800/80 space-y-6 shadow-2xl">
+          <form onSubmit={handleSave} className="bg-white dark:bg-[#111827] p-6 sm:p-8 rounded-3xl border border-slate-200/80 dark:border-slate-800/80 space-y-6 shadow-xl dark:shadow-2xl transition-colors">
             {saved && (
               <motion.div
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-semibold flex items-center space-x-2 font-mono"
+                className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-600 dark:text-emerald-400 text-xs font-semibold flex items-center space-x-2 font-mono"
               >
-                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
                 <span>Portal settings saved successfully!</span>
               </motion.div>
             )}
 
             <div className="space-y-4">
-              <h3 className="text-base font-extrabold text-white flex items-center border-b border-slate-800/80 pb-3">
-                <Sparkles className="w-5 h-5 text-emerald-400 mr-2" />
+              <h3 className="text-base font-extrabold text-slate-900 dark:text-white flex items-center border-b border-slate-200 dark:border-slate-800/80 pb-3">
+                <Sparkles className="w-5 h-5 text-emerald-500 dark:text-emerald-400 mr-2" />
                 AI Vision & Voice Dictation Automation
               </h3>
 
               {/* Setting Card 1 */}
-              <div className="p-5 rounded-2xl bg-[#0F172A] border border-slate-800/80 flex items-center justify-between gap-4 transition-colors hover:border-slate-700">
+              <div className="p-5 rounded-2xl bg-slate-50 dark:bg-[#0F172A] border border-slate-200 dark:border-slate-800/80 flex items-center justify-between gap-4 transition-colors hover:border-slate-300 dark:hover:border-slate-700">
                 <div className="space-y-1">
                   <div className="flex items-center space-x-2">
-                    <h4 className="font-bold text-sm text-white">Auto-Publish &gt;99% Confidence Extractions</h4>
+                    <h4 className="font-bold text-sm text-slate-900 dark:text-white">Auto-Publish &gt;99% Confidence Extractions</h4>
                     <StatusBadge type="success" label="Active Rule" />
                   </div>
-                  <p className="text-xs text-slate-400">Bypass review queue if WhatsApp voice dictation confidence exceeds 99%.</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">Bypass review queue if WhatsApp voice dictation confidence exceeds 99%.</p>
                 </div>
                 <input
                   type="checkbox"
@@ -87,13 +87,13 @@ function ShopSettingsPageContent() {
               </div>
 
               {/* Setting Card 2 */}
-              <div className="p-5 rounded-2xl bg-[#0F172A] border border-slate-800/80 flex items-center justify-between gap-4 transition-colors hover:border-slate-700">
+              <div className="p-5 rounded-2xl bg-slate-50 dark:bg-[#0F172A] border border-slate-200 dark:border-slate-800/80 flex items-center justify-between gap-4 transition-colors hover:border-slate-300 dark:hover:border-slate-700">
                 <div className="space-y-1">
                   <div className="flex items-center space-x-2">
-                    <h4 className="font-bold text-sm text-white">WhatsApp Confirmation Receipts</h4>
+                    <h4 className="font-bold text-sm text-slate-900 dark:text-white">WhatsApp Confirmation Receipts</h4>
                     <StatusBadge type="info" label="Webhook Sync" />
                   </div>
-                  <p className="text-xs text-slate-400">Receive instant WhatsApp reply receipt whenever an audio note is processed.</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">Receive instant WhatsApp reply receipt whenever an audio note is processed.</p>
                 </div>
                 <input
                   type="checkbox"
@@ -104,13 +104,13 @@ function ShopSettingsPageContent() {
               </div>
 
               {/* Setting Card 3 */}
-              <div className="p-5 rounded-2xl bg-[#0F172A] border border-slate-800/80 flex items-center justify-between gap-4 transition-colors hover:border-slate-700">
+              <div className="p-5 rounded-2xl bg-slate-50 dark:bg-[#0F172A] border border-slate-200 dark:border-slate-800/80 flex items-center justify-between gap-4 transition-colors hover:border-slate-300 dark:hover:border-slate-700">
                 <div className="space-y-1">
                   <div className="flex items-center space-x-2">
-                    <h4 className="font-bold text-sm text-white">Automated Evening Freshness Discounting</h4>
+                    <h4 className="font-bold text-sm text-slate-900 dark:text-white">Automated Evening Freshness Discounting</h4>
                     <StatusBadge type="warning" label="7:00 PM Trigger" />
                   </div>
-                  <p className="text-xs text-slate-400">Automatically apply 10% discount to daily produce after 7:00 PM.</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">Automatically apply 10% discount to daily produce after 7:00 PM.</p>
                 </div>
                 <input
                   type="checkbox"

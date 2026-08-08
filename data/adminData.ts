@@ -73,7 +73,7 @@ export const ADMIN_STATS: AdminStat[] = [
 ];
 
 export const MOST_SEARCHED_PRODUCTS: SearchedProduct[] = [
-  { id: 'sp1', term: 'Organic Vine Tomatoes', category: 'Vegetables', searchVolume: 4210, fulfillmentRate: 98.4, trend: 'up' },
+  { id: 'sp1', term: 'Slim Fit Linen Shirts', category: "Men's Apparel", searchVolume: 4210, fulfillmentRate: 98.4, trend: 'up' },
   { id: 'sp2', term: 'Hass Avocados', category: 'Fruits', searchVolume: 3890, fulfillmentRate: 97.2, trend: 'up' },
   { id: 'sp3', term: 'Fresh Sourdough Bread', category: 'Bakery', searchVolume: 2450, fulfillmentRate: 99.0, trend: 'stable' },
   { id: 'sp4', term: 'Grass-Fed Whole Milk', category: 'Dairy', searchVolume: 2180, fulfillmentRate: 96.5, trend: 'up' },

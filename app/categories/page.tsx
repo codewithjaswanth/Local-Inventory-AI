@@ -20,7 +20,7 @@ export default function CategoriesPage() {
           </span>
           <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight mt-2 flex items-center">
             <Grid className="w-8 h-8 text-emerald-500 mr-3" />
-            Produce & Grocery Categories
+            Local Store Categories
           </h1>
           <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">
             Browse through AI-monitored categories to find live stock in nearby stores.
@@ -28,13 +28,13 @@ export default function CategoriesPage() {
         </div>
 
         {/* Categories Cards Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3.5 sm:gap-6">
           {POPULAR_CATEGORIES.map((category) => (
             <CategoryCard
               key={category.id}
               category={category}
-              onSelect={(cat: Category) => {
-                window.location.href = `/search?category=${encodeURIComponent(cat.name)}`;
+              onSelect={(cat) => {
+                window.location.href = `/categories/${cat.id}`;
               }}
             />
           ))}

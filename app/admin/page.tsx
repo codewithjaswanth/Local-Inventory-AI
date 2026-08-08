@@ -12,45 +12,41 @@ import {
 } from '@/data/adminData';
 import { DETAILED_SHOPS } from '@/data/mockData';
 import { SEARCH_PRODUCTS } from '@/data/searchProducts';
+import Link from 'next/link';
 import {
   LayoutDashboard,
   Store,
   Package,
-  BarChart3,
   Cpu,
-  Settings,
   Sparkles,
-  CheckCircle2,
   Search,
   Plus,
-  Bell,
   ChevronRight,
   ShieldCheck,
-  Mic,
-  Camera,
-  FileText,
   TrendingUp,
-  AlertTriangle,
+  TrendingDown,
+  Minus,
   Eye,
-  RefreshCw,
   Activity,
   ArrowUpRight,
-  Check,
   X,
-  Filter,
-  CheckSquare,
+  ExternalLink,
+  CheckCircle2,
+  Home,
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { MetricCard } from '@/components/ui/MetricCard';
-import { SectionHeader } from '@/components/ui/SectionHeader';
-import { StatusBadge } from '@/components/ui/StatusBadge';
-import { AnimatedButton } from '@/components/ui/AnimatedButton';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
+import { useSearchParams } from 'next/navigation';
+import { AnimatedButton } from '@/components/ui/AnimatedButton';
+import { toNominativeCase } from '@/utils';
 
 export default function AdminDashboardPage() {
   return (
     <RoleGuard allowedRoles={['admin']}>
-      <AdminDashboardPageContent />
+      <React.Suspense fallback={<div className="min-h-screen bg-[#040810] flex items-center justify-center text-xs font-mono text-slate-400">Loading Admin Console...</div>}>
+        <AdminDashboardPageContent />
+      </React.Suspense>
     </RoleGuard>
   );
 }
@@ -58,10 +54,94 @@ export default function AdminDashboardPage() {
 function AdminDashboardPageContent() {
   console.log('[PAGE] Rendering Admin Dashboard');
   const { profile } = useAuth();
+  const searchParams = useSearchParams();
+  const tabParam = searchParams?.get('tab');
   const [activeTab, setActiveTab] = useState<'dashboard' | 'shops' | 'inventory' | 'ai-logs' | 'keywords'>('dashboard');
+
+  React.useEffect(() => {
+    if (tabParam === 'keywords' || tabParam === 'shops' || tabParam === 'inventory' || tabParam === 'ai-logs') {
+      setActiveTab(tabParam);
+    } else {
+      setActiveTab('dashboard');
+    }
+  }, [tabParam]);
   const [searchTerm, setSearchTerm] = useState('');
   const [logFilter, setLogFilter] = useState<'All' | 'Validated' | 'Flagged Review'>('All');
   const [aiLogs, setAiLogs] = useState<AiLogEntry[]>(RECENT_AI_LOGS);
+
+  const formatPriceUnit = (unit: string) => {
+    let clean = (unit || 'kg').replace(/^per\s+/i, '').trim();
+    if (clean.toLowerCase() === 'each') return 'unit';
+    return clean;
+  };
+
+  const formatQtyUnit = (unit: string, qty: number) => {
+    let clean = (unit || 'kg').replace(/^per\s+/i, '').trim().toLowerCase();
+    if (clean === 'each') return 'units';
+    if (clean === 'kg') return 'kg';
+    if (clean === 'pack') return qty === 1 ? 'pack' : 'packs';
+    if (clean === 'box') return qty === 1 ? 'box' : 'boxes';
+    return clean;
+  };
+
+  const renderInputTypeBadge = (inputType: string) => {
+    const typeLower = inputType.toLowerCase();
+    let bgClass = 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700';
+    let dotClass = 'bg-slate-400';
+
+    if (typeLower.includes('voice')) {
+      bgClass = 'bg-purple-500/15 text-purple-700 dark:text-purple-300 border-purple-500/30';
+      dotClass = 'bg-purple-500';
+    } else if (typeLower.includes('photo') || typeLower.includes('ocr') || typeLower.includes('vision')) {
+      bgClass = 'bg-sky-500/15 text-sky-700 dark:text-sky-300 border-sky-500/30';
+      dotClass = 'bg-sky-500';
+    } else if (typeLower.includes('receipt')) {
+      bgClass = 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border-emerald-500/30';
+      dotClass = 'bg-emerald-500';
+    }
+
+    return (
+      <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-mono font-bold border whitespace-nowrap ${bgClass}`}>
+        <span className={`w-1.5 h-1.5 rounded-full ${dotClass}`} />
+        <span>{inputType}</span>
+      </span>
+    );
+  };
+
+  const renderStatusBadge = (status: string) => {
+    if (status === 'Flagged Review' || status === 'Flagged/Review') {
+      return (
+        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-500/15 text-amber-700 dark:text-amber-400 border border-amber-500/30 shadow-xs whitespace-nowrap">
+          <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
+          <span>Flagged / Review</span>
+        </span>
+      );
+    }
+    return (
+      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30 shadow-xs whitespace-nowrap">
+        <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+        <span>Validated</span>
+      </span>
+    );
+  };
+
+  const tabTitles: Record<string, string> = {
+    dashboard: 'System Overview',
+    shops: 'Registered Shops',
+    inventory: 'Global Stock Catalog',
+    'ai-logs': 'AI Extraction Stream',
+    keywords: 'Search Trends',
+  };
+
+  const adminName = toNominativeCase(profile?.name);
+
+  const tabDescriptions: Record<string, string> = {
+    dashboard: `Welcome back, ${adminName}. Here is your real-time platform health, store inventory, and AI throughput.`,
+    shops: 'Manage registered store credentials, locations, and verification status across the marketplace.',
+    inventory: 'Inspect live produce items, available stock quantities, prices, and AI freshness verification status.',
+    'ai-logs': 'Real-time multi-modal AI stream inspector for WhatsApp voice notes, OCR shelf photos, and receipt parsing.',
+    keywords: 'Track hyperlocal search terms, monthly search volume, and neighborhood store fulfillment rates.',
+  };
 
   const filteredLogs = aiLogs.filter((log) => {
     const matchesSearch =
@@ -87,130 +167,61 @@ function AdminDashboardPageContent() {
   );
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-[#040810] text-slate-900 dark:text-slate-100 flex overflow-hidden selection:bg-emerald-500/30 font-sans transition-colors duration-200">
-      {/* Sleek Enterprise Admin Sidebar Navigation */}
-      <aside className="hidden lg:flex w-64 flex-col bg-white dark:bg-[#060D1A] border-r border-slate-200 dark:border-slate-800/80 flex-shrink-0 min-h-screen select-none transition-colors">
-        {/* Brand Header */}
-        <div className="p-6 border-b border-slate-200 dark:border-slate-800/80">
-          <a href="/" className="flex items-center space-x-3">
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-purple-600 via-indigo-500 to-emerald-400 text-white flex items-center justify-center shadow-lg shadow-purple-500/20 shrink-0">
-              <ShieldCheck className="w-5 h-5 text-white" />
-            </div>
-            <div className="flex flex-col">
-              <span className="font-extrabold text-base text-slate-900 dark:text-white tracking-tight leading-none">
-                Admin Control<span className="text-purple-600 dark:text-purple-400">.AI</span>
-              </span>
-              <span className="text-[9px] text-purple-600 dark:text-purple-400 mt-1 uppercase font-bold tracking-wider">
-                ENTERPRISE OPERATIONAL PORTAL
-              </span>
-            </div>
-          </a>
-        </div>
-
-        {/* Navigation Item Tabs */}
-        <nav className="p-4 space-y-1.5 flex-1" aria-label="Admin Navigation">
-          <div className="text-[10px] font-bold text-slate-500 uppercase tracking-wider px-3 mb-2">
-            System Control Modules
-          </div>
-
-          {[
-            { id: 'dashboard', label: 'System Overview', icon: LayoutDashboard },
-            { id: 'shops', label: 'Registered Shops', icon: Store, badge: `${DETAILED_SHOPS.length} Stores` },
-            { id: 'inventory', label: 'Global Stock Catalog', icon: Package },
-            { id: 'ai-logs', label: 'AI Vision & NLP Logs', icon: Cpu, badge: 'Live Stream' },
-            { id: 'keywords', label: 'Marketplace Search Trends', icon: TrendingUp },
-          ].map((tab) => {
-            const Icon = tab.icon;
-            const isActive = activeTab === tab.id;
-
-            return (
-              <button
-                key={tab.id}
-                type="button"
-                onClick={() => setActiveTab(tab.id as any)}
-                className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-2xl font-medium text-xs transition-all relative ${
-                  isActive
-                    ? 'bg-purple-500/15 text-purple-300 border border-purple-500/30 font-bold shadow-md shadow-purple-950/30'
-                    : 'text-slate-400 hover:text-slate-100 hover:bg-slate-900/60'
-                }`}
-              >
-                <div className="flex items-center space-x-3">
-                  <Icon className={`w-4 h-4 ${isActive ? 'text-purple-400' : 'text-slate-400'}`} />
-                  <span>{tab.label}</span>
-                </div>
-                {tab.badge && (
-                  <span
-                    className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
-                      isActive ? 'bg-purple-500/20 text-purple-300' : 'bg-slate-800/80 text-slate-400'
-                    }`}
-                  >
-                    {tab.badge}
-                  </span>
-                )}
-              </button>
-            );
-          })}
-        </nav>
-
-        {/* Footer Link & Profile */}
-        <div className="p-4 border-t border-slate-800/80 bg-slate-950/40 space-y-3">
-          <a
-            href="/dashboard"
-            className="w-full flex items-center justify-between px-3.5 py-2 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 hover:bg-emerald-500/20 text-xs font-semibold transition-all"
-          >
-            <div className="flex items-center space-x-2">
-              <Store className="w-3.5 h-3.5" />
-              <span>Shopkeeper Portal</span>
-            </div>
-            <ArrowUpRight className="w-3.5 h-3.5" />
-          </a>
-
-          <div className="flex items-center space-x-3 pt-1">
-            <div className="w-8 h-8 rounded-xl bg-purple-500/20 border border-purple-500/40 text-purple-300 flex items-center justify-center text-xs font-bold">
-              AD
-            </div>
-            <div className="flex flex-col text-xs truncate">
-              <span className="font-bold text-white truncate">{profile?.name || 'Administrator'}</span>
-              <span className="text-[10px] text-purple-400 font-medium">Super Admin Permission</span>
-            </div>
-          </div>
-        </div>
-      </aside>
-
-      {/* Main Workspace Canvas */}
-      <div className="flex-1 flex flex-col min-w-0 overflow-y-auto">
-        {/* Sticky Header Bar */}
+    <>
+      {/* Sticky Top Header Bar */}
         <header className="h-16 bg-white/90 dark:bg-[#040810]/90 backdrop-blur-xl border-b border-slate-200 dark:border-slate-800/80 px-6 flex items-center justify-between sticky top-0 z-30 transition-colors">
-          <div className="flex items-center space-x-2 text-xs font-semibold text-slate-400">
-            <span>Admin Console</span>
-            <ChevronRight className="w-3.5 h-3.5" />
-            <span className="text-white font-bold capitalize">{activeTab.replace('-', ' ')}</span>
+          <div className="flex items-center space-x-2 text-xs font-semibold text-slate-500 dark:text-slate-400">
+            <Link
+              href="/admin"
+              className="font-extrabold text-slate-900 dark:text-white hover:text-purple-600 dark:hover:text-purple-400 transition-colors flex items-center space-x-2"
+            >
+              <div className="w-6 h-6 rounded-md bg-purple-600 text-white flex items-center justify-center">
+                <ShieldCheck className="w-3.5 h-3.5 text-white" />
+              </div>
+              <span className="text-sm tracking-tight">Inventra.AI</span>
+            </Link>
+            <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
+            <Link
+              href="/admin"
+              className="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
+            >
+              Dashboard
+            </Link>
+            {activeTab !== 'dashboard' && (
+              <>
+                <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
+                <span className="capitalize text-purple-600 dark:text-purple-400 font-semibold">{tabTitles[activeTab]}</span>
+              </>
+            )}
           </div>
 
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-3 sm:space-x-4">
             <ThemeToggle />
-            <div className="hidden sm:flex items-center space-x-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-medium">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+            <div className="hidden md:flex items-center space-x-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs font-semibold">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
               <span>System Status: 100% Operational</span>
             </div>
 
             <a href="/shop/create">
               <AnimatedButton variant="primary" size="sm" leftIcon={<Plus className="w-4 h-4" />}>
-                Register New Shop
+                Register Shop
               </AnimatedButton>
             </a>
+
           </div>
         </header>
 
         {/* Dashboard Work Area */}
         <main className="p-6 sm:p-8 space-y-8 max-w-7xl mx-auto w-full">
-          {/* Header Title Banner */}
-          <SectionHeader
-            title={`Enterprise System Control — ${profile?.name || 'Administrator'}`}
-            description="Real-time multi-modal AI extraction tracking, shopkeeper verification status, and global inventory analytics."
-            icon={ShieldCheck}
-            badgeText="ADMIN CONTROL CENTER"
-          />
+          {/* Single Clean Page Title Header */}
+          <div className="space-y-1">
+            <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
+              {tabTitles[activeTab]}
+            </h1>
+            <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
+              {tabDescriptions[activeTab]}
+            </p>
+          </div>
 
           {/* Animated Tab Content Container */}
           <AnimatePresence mode="wait">
@@ -223,7 +234,7 @@ function AdminDashboardPageContent() {
                 transition={{ duration: 0.25 }}
                 className="space-y-8"
               >
-                {/* 4 Metric Cards Grid */}
+                {/* Sleek KPI Stat Cards Grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
                   <MetricCard
                     title="Active Registered Stores"
@@ -266,18 +277,18 @@ function AdminDashboardPageContent() {
                 {/* Main Visuals Grid: Hourly Chart & Top Keywords */}
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
                   {/* Left 7 Cols: Hourly AI Extraction Activity Chart */}
-                  <div className="lg:col-span-7 bg-[#091122] p-6 rounded-3xl border border-slate-800/80 shadow-2xl space-y-6">
+                  <div className="lg:col-span-7 bg-white dark:bg-[#091122] p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800/80 shadow-xl space-y-6">
                     <div className="flex items-center justify-between">
                       <div>
-                        <h3 className="text-base font-extrabold text-white flex items-center">
-                          <Activity className="w-5 h-5 text-emerald-400 mr-2" />
+                        <h3 className="text-base font-extrabold text-slate-900 dark:text-white flex items-center">
+                          <Activity className="w-5 h-5 text-emerald-500 mr-2" />
                           Hourly AI Extraction Throughput
                         </h3>
-                        <p className="text-xs text-slate-400 mt-0.5">
+                        <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
                           Voice notes vs receipt OCR photo scans across all neighborhood stores.
                         </p>
                       </div>
-                      <span className="text-[10px] font-mono bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2.5 py-1 rounded-full font-bold">
+                      <span className="text-[10px] font-mono bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 px-2.5 py-1 rounded-full font-bold">
                         Live 24h Feed
                       </span>
                     </div>
@@ -309,29 +320,29 @@ function AdminDashboardPageContent() {
                       ))}
                     </div>
 
-                    <div className="flex items-center justify-center space-x-6 text-xs font-mono pt-2 border-t border-slate-800/60">
+                    <div className="flex items-center justify-center space-x-6 text-xs font-mono pt-2 border-t border-slate-100 dark:border-slate-800/60">
                       <div className="flex items-center space-x-2">
-                        <span className="w-3 h-3 rounded-md bg-emerald-400" />
-                        <span className="text-slate-300">Voice Note Extractions</span>
+                        <span className="w-3 h-3 rounded-md bg-emerald-500" />
+                        <span className="text-slate-600 dark:text-slate-300">Voice Note Extractions</span>
                       </div>
                       <div className="flex items-center space-x-2">
-                        <span className="w-3 h-3 rounded-md bg-purple-400" />
-                        <span className="text-slate-300">WhatsApp OCR Photo Scans</span>
+                        <span className="w-3 h-3 rounded-md bg-purple-500" />
+                        <span className="text-slate-600 dark:text-slate-300">WhatsApp OCR Photo Scans</span>
                       </div>
                     </div>
                   </div>
 
                   {/* Right 5 Cols: Top Search Keywords */}
-                  <div className="lg:col-span-5 bg-[#091122] p-6 rounded-3xl border border-slate-800/80 shadow-2xl space-y-5">
+                  <div className="lg:col-span-5 bg-white dark:bg-[#091122] p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800/80 shadow-xl space-y-5">
                     <div className="flex items-center justify-between">
-                      <h3 className="text-base font-extrabold text-white flex items-center">
-                        <TrendingUp className="w-5 h-5 text-amber-400 mr-2" />
-                        Trending Local Search Keywords
+                      <h3 className="text-base font-extrabold text-slate-900 dark:text-white flex items-center">
+                        <TrendingUp className="w-5 h-5 text-amber-500 mr-2" />
+                        Trending Search Keywords
                       </h3>
                       <button
                         type="button"
                         onClick={() => setActiveTab('keywords')}
-                        className="text-xs font-mono text-purple-400 hover:underline"
+                        className="text-xs font-mono text-purple-600 dark:text-purple-400 hover:underline"
                       >
                         View All →
                       </button>
@@ -341,18 +352,18 @@ function AdminDashboardPageContent() {
                       {MOST_SEARCHED_PRODUCTS.slice(0, 4).map((item) => (
                         <div
                           key={item.id}
-                          className="p-3.5 rounded-2xl bg-slate-950/80 border border-slate-800/80 flex items-center justify-between hover:border-purple-500/40 transition-colors"
+                          className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-950/80 border border-slate-200/80 dark:border-slate-800/80 flex items-center justify-between hover:border-purple-500/40 transition-colors"
                         >
                           <div>
-                            <h4 className="font-bold text-white text-xs font-sans">{item.term}</h4>
-                            <span className="text-[10px] text-slate-400">
+                            <h4 className="font-bold text-slate-900 dark:text-white text-xs font-sans">{item.term}</h4>
+                            <span className="text-[10px] text-slate-500 dark:text-slate-400">
                               {item.category} • {item.searchVolume.toLocaleString()} searches
                             </span>
                           </div>
 
                           <div className="text-right">
-                            <span className="font-bold text-emerald-400 block">{item.fulfillmentRate}%</span>
-                            <span className="text-[9px] text-slate-500">In Stock Rate</span>
+                            <span className="font-bold text-emerald-600 dark:text-emerald-400 block">{item.fulfillmentRate}%</span>
+                            <span className="text-[9px] text-slate-400">In Stock Rate</span>
                           </div>
                         </div>
                       ))}
@@ -360,15 +371,15 @@ function AdminDashboardPageContent() {
                   </div>
                 </div>
 
-                {/* Real-time AI Extraction Stream */}
-                <div className="bg-[#091122] rounded-3xl border border-slate-800/80 p-6 space-y-5 shadow-2xl">
+                {/* Real-time AI Extraction Stream Table */}
+                <div className="bg-white dark:bg-[#091122] rounded-3xl border border-slate-200/80 dark:border-slate-800/80 p-6 space-y-5 shadow-xl">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h3 className="text-base font-extrabold text-white flex items-center">
-                        <Cpu className="w-5 h-5 text-purple-400 mr-2" />
+                      <h3 className="text-base font-extrabold text-slate-900 dark:text-white flex items-center">
+                        <Cpu className="w-5 h-5 text-purple-500 mr-2" />
                         Real-Time Multi-Modal AI Extraction Stream
                       </h3>
-                      <p className="text-xs text-slate-400 mt-0.5">
+                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
                         Live stream of WhatsApp voice notes, OCR shelf photos, and receipt parsing.
                       </p>
                     </div>
@@ -376,43 +387,45 @@ function AdminDashboardPageContent() {
                     <button
                       type="button"
                       onClick={() => setActiveTab('ai-logs')}
-                      className="px-3.5 py-1.5 rounded-xl bg-purple-500/10 hover:bg-purple-500/20 text-purple-300 font-mono text-xs border border-purple-500/30 transition-all"
+                      className="px-3.5 py-1.5 rounded-xl bg-purple-500/10 hover:bg-purple-500/20 text-purple-700 dark:text-purple-300 font-mono text-xs border border-purple-500/30 transition-all"
                     >
-                      Open Full Log Inspector
+                      Open Log Inspector
                     </button>
                   </div>
 
                   <div className="overflow-x-auto">
-                    <table className="w-full text-left text-xs text-slate-300">
-                      <thead className="bg-[#050A14] text-slate-400 uppercase font-mono text-[10px] tracking-wider border-b border-slate-800">
+                    <table className="w-full text-left text-xs text-slate-700 dark:text-slate-300 border-collapse">
+                      <thead className="bg-slate-100 dark:bg-[#050A14] text-slate-500 dark:text-slate-400 uppercase font-mono text-[10px] tracking-wider border-b border-slate-200 dark:border-slate-800">
                         <tr>
-                          <th className="p-3.5 rounded-l-xl">Timestamp</th>
-                          <th className="p-3.5">Store Name</th>
-                          <th className="p-3.5">Input Type</th>
-                          <th className="p-3.5">AI Summary</th>
-                          <th className="p-3.5">Confidence</th>
-                          <th className="p-3.5 rounded-r-xl">Status</th>
+                          <th className="px-5 py-4 rounded-l-xl whitespace-nowrap">Log ID</th>
+                          <th className="px-5 py-4 whitespace-nowrap">Timestamp</th>
+                          <th className="px-5 py-4 whitespace-nowrap">Store Name</th>
+                          <th className="px-5 py-4 whitespace-nowrap">Input Type</th>
+                          <th className="px-5 py-4 whitespace-nowrap">Extracted Summary</th>
+                          <th className="px-5 py-4 whitespace-nowrap">Confidence</th>
+                          <th className="px-5 py-4 rounded-r-xl whitespace-nowrap">Status</th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-slate-800/60">
-                        {aiLogs.slice(0, 4).map((log) => (
-                          <tr key={log.id} className="hover:bg-slate-900/60 transition-colors">
-                            <td className="p-3.5 font-mono text-slate-400">{log.timestamp}</td>
-                            <td className="p-3.5 font-bold text-white">{log.shopName}</td>
-                            <td className="p-3.5">
-                              <span className="px-2.5 py-1 rounded-full text-[10px] font-mono font-bold bg-slate-800 text-purple-300 border border-slate-700">
-                                {log.inputType}
-                              </span>
+                      <tbody className="divide-y divide-slate-200/60 dark:divide-slate-800/60">
+                        {aiLogs.slice(0, 5).map((log) => (
+                          <tr
+                            key={log.id}
+                            className="even:bg-slate-50/50 dark:even:bg-slate-900/30 hover:bg-purple-50/40 dark:hover:bg-slate-800/60 transition-colors border-b border-slate-200/60 dark:border-slate-800/50"
+                          >
+                            <td className="px-5 py-4 font-mono text-purple-600 dark:text-purple-400 font-bold whitespace-nowrap">
+                              #LOG-{log.id.toUpperCase().replace('LOG-', '').padStart(4, '0')}
                             </td>
-                            <td className="p-3.5 font-mono text-slate-300 max-w-xs truncate">
+                            <td className="px-5 py-4 font-mono text-slate-500 dark:text-slate-400 whitespace-nowrap">{log.timestamp}</td>
+                            <td className="px-5 py-4 font-bold text-slate-900 dark:text-white font-sans whitespace-nowrap">{log.shopName}</td>
+                            <td className="px-5 py-4 whitespace-nowrap">
+                              {renderInputTypeBadge(log.inputType)}
+                            </td>
+                            <td className="px-5 py-4 font-mono text-slate-600 dark:text-slate-300 max-w-xs sm:max-w-md truncate">
                               {log.extractedSummary}
                             </td>
-                            <td className="p-3.5 font-mono text-emerald-400 font-bold">{log.confidenceScore}%</td>
-                            <td className="p-3.5">
-                              <StatusBadge
-                                type={log.status === 'Flagged Review' ? 'warning' : 'success'}
-                                label={log.status}
-                              />
+                            <td className="px-5 py-4 font-mono text-emerald-600 dark:text-emerald-400 font-bold whitespace-nowrap">{log.confidenceScore}%</td>
+                            <td className="px-5 py-4 whitespace-nowrap">
+                              {renderStatusBadge(log.status)}
                             </td>
                           </tr>
                         ))}
@@ -433,55 +446,60 @@ function AdminDashboardPageContent() {
                 transition={{ duration: 0.25 }}
                 className="space-y-6"
               >
-                <div className="bg-[#091122] rounded-3xl border border-slate-800/80 p-6 space-y-5 shadow-2xl">
+                <div className="bg-white dark:bg-[#091122] rounded-3xl border border-slate-200/80 dark:border-slate-800/80 p-6 space-y-5 shadow-xl">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                    <div>
-                      <h3 className="text-lg font-extrabold text-white">Registered Marketplace Stores ({filteredShops.length})</h3>
-                      <p className="text-xs text-slate-400">Manage owner credentials, address locations, and verification status.</p>
+                    <div className="flex items-center space-x-2">
+                      <h3 className="text-base font-extrabold text-slate-900 dark:text-white">Store Listings</h3>
+                      <span className="px-2.5 py-0.5 rounded-full text-xs font-mono font-bold bg-purple-500/10 text-purple-700 dark:text-purple-300 border border-purple-500/20">
+                        {filteredShops.length} stores
+                      </span>
                     </div>
 
                     <div className="relative max-w-xs w-full">
-                      <Search className="w-4 h-4 text-slate-500 absolute left-3.5 top-3" />
+                      <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
                       <input
                         type="text"
                         placeholder="Search stores or owners..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="w-full bg-slate-950 border border-slate-800 rounded-xl pl-9 pr-3.5 py-2 text-xs text-white focus:outline-none focus:border-purple-500"
+                        className="w-full bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl pl-9 pr-3.5 py-2 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-purple-500"
                       />
                     </div>
                   </div>
 
                   <div className="overflow-x-auto">
-                    <table className="w-full text-left text-xs text-slate-300">
-                      <thead className="bg-[#050A14] text-slate-400 uppercase font-mono text-[10px] tracking-wider border-b border-slate-800">
+                    <table className="w-full text-left text-xs text-slate-700 dark:text-slate-300 border-collapse">
+                      <thead className="bg-slate-100 dark:bg-[#050A14] text-slate-500 dark:text-slate-400 uppercase font-mono text-[10px] tracking-wider border-b border-slate-200 dark:border-slate-800">
                         <tr>
-                          <th className="p-3.5 rounded-l-xl">Shop Name</th>
-                          <th className="p-3.5">Address</th>
-                          <th className="p-3.5">Category</th>
-                          <th className="p-3.5">Phone</th>
-                          <th className="p-3.5">Rating</th>
-                          <th className="p-3.5 rounded-r-xl text-right">Action</th>
+                          <th className="px-5 py-4 rounded-l-xl whitespace-nowrap">Shop Name</th>
+                          <th className="px-5 py-4 whitespace-nowrap">Address</th>
+                          <th className="px-5 py-4 whitespace-nowrap">Category</th>
+                          <th className="px-5 py-4 whitespace-nowrap">Phone</th>
+                          <th className="px-5 py-4 whitespace-nowrap">Rating</th>
+                          <th className="px-5 py-4 rounded-r-xl text-right whitespace-nowrap">Action</th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-slate-800/60">
+                      <tbody className="divide-y divide-slate-200/60 dark:divide-slate-800/60">
                         {filteredShops.map((s) => (
-                          <tr key={s.id} className="hover:bg-slate-900/60 transition-colors">
-                            <td className="p-3.5 font-bold text-white flex items-center space-x-3">
-                              <img src={s.image} alt={s.name} className="w-8 h-8 rounded-xl object-cover border border-slate-700" />
-                              <span>{s.name}</span>
+                          <tr
+                            key={s.id}
+                            className="even:bg-slate-50/50 dark:even:bg-slate-900/30 hover:bg-purple-50/40 dark:hover:bg-slate-800/60 transition-colors border-b border-slate-200/60 dark:border-slate-800/50"
+                          >
+                            <td className="px-5 py-4 font-bold text-slate-900 dark:text-white flex items-center space-x-3 whitespace-nowrap">
+                              <img src={s.image} alt={s.name} className="w-8 h-8 rounded-xl object-cover border border-slate-200 dark:border-slate-700 shrink-0" />
+                              <span className="truncate">{s.name}</span>
                             </td>
-                            <td className="p-3.5 font-mono text-slate-400">{s.address}</td>
-                            <td className="p-3.5 font-mono text-emerald-400 font-bold">{s.category}</td>
-                            <td className="p-3.5 font-mono text-slate-300">{s.phone}</td>
-                            <td className="p-3.5 font-mono text-amber-400 font-bold">★ {s.rating}</td>
-                            <td className="p-3.5 text-right">
+                            <td className="px-5 py-4 font-mono text-slate-500 dark:text-slate-400 truncate max-w-xs">{s.address}</td>
+                            <td className="px-5 py-4 font-mono text-emerald-600 dark:text-emerald-400 font-bold whitespace-nowrap">{s.category}</td>
+                            <td className="px-5 py-4 font-mono text-slate-600 dark:text-slate-300 whitespace-nowrap">{s.phone}</td>
+                            <td className="px-5 py-4 font-mono text-amber-500 dark:text-amber-400 font-bold whitespace-nowrap">★ {s.rating}</td>
+                            <td className="px-5 py-4 text-right whitespace-nowrap">
                               <a
                                 href={`/shop/${s.id}`}
-                                className="px-3 py-1 rounded-xl bg-purple-500/10 hover:bg-purple-500/20 text-purple-300 font-mono text-[11px] border border-purple-500/30 transition-all inline-flex items-center space-x-1"
+                                className="w-9 h-9 rounded-xl bg-slate-100 dark:bg-slate-900 hover:bg-purple-50 dark:hover:bg-purple-500/20 text-slate-500 hover:text-purple-600 dark:hover:text-purple-300 border border-slate-200 dark:border-slate-800 hover:border-purple-300 dark:hover:border-purple-500/40 transition-all inline-flex items-center justify-center shadow-xs cursor-pointer"
+                                title={`View ${s.name}`}
                               >
-                                <Eye className="w-3 h-3 mr-1" />
-                                <span>View Store</span>
+                                <Eye className="w-4 h-4" />
                               </a>
                             </td>
                           </tr>
@@ -503,50 +521,54 @@ function AdminDashboardPageContent() {
                 transition={{ duration: 0.25 }}
                 className="space-y-6"
               >
-                <div className="bg-[#091122] rounded-3xl border border-slate-800/80 p-6 space-y-5 shadow-2xl">
+                <div className="bg-white dark:bg-[#091122] rounded-3xl border border-slate-200/80 dark:border-slate-800/80 p-6 space-y-5 shadow-xl">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                    <div>
-                      <h3 className="text-lg font-extrabold text-white">Global Produce Inventory ({filteredInventory.length})</h3>
-                      <p className="text-xs text-slate-400">All live produce items across neighborhood stores.</p>
+                    <div className="flex items-center space-x-2">
+                      <h3 className="text-base font-extrabold text-slate-900 dark:text-white">Catalog Items</h3>
+                      <span className="px-2.5 py-0.5 rounded-full text-xs font-mono font-bold bg-purple-500/10 text-purple-700 dark:text-purple-300 border border-purple-500/20">
+                        {filteredInventory.length} items
+                      </span>
                     </div>
 
                     <div className="relative max-w-xs w-full">
-                      <Search className="w-4 h-4 text-slate-500 absolute left-3.5 top-3" />
+                      <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
                       <input
                         type="text"
                         placeholder="Search produce or shop..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="w-full bg-slate-950 border border-slate-800 rounded-xl pl-9 pr-3.5 py-2 text-xs text-white focus:outline-none focus:border-purple-500"
+                        className="w-full bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl pl-9 pr-3.5 py-2 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-purple-500"
                       />
                     </div>
                   </div>
 
                   <div className="overflow-x-auto">
-                    <table className="w-full text-left text-xs text-slate-300">
-                      <thead className="bg-[#050A14] text-slate-400 uppercase font-mono text-[10px] tracking-wider border-b border-slate-800">
+                    <table className="w-full text-left text-xs text-slate-700 dark:text-slate-300 border-collapse">
+                      <thead className="bg-slate-100 dark:bg-[#050A14] text-slate-500 dark:text-slate-400 uppercase font-mono text-[10px] tracking-wider border-b border-slate-200 dark:border-slate-800">
                         <tr>
-                          <th className="p-3.5 rounded-l-xl">Produce Name</th>
-                          <th className="p-3.5">Store</th>
-                          <th className="p-3.5">Price</th>
-                          <th className="p-3.5">Stock Qty</th>
-                          <th className="p-3.5">Freshness Score</th>
-                          <th className="p-3.5 rounded-r-xl">AI Status</th>
+                          <th className="px-5 py-4 rounded-l-xl whitespace-nowrap">Produce Name</th>
+                          <th className="px-5 py-4 whitespace-nowrap">Store</th>
+                          <th className="px-5 py-4 whitespace-nowrap">Price</th>
+                          <th className="px-5 py-4 whitespace-nowrap">Stock Qty</th>
+                          <th className="px-5 py-4 whitespace-nowrap">Freshness Score</th>
+                          <th className="px-5 py-4 rounded-r-xl whitespace-nowrap text-center">AI Status</th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-slate-800/60">
+                      <tbody className="divide-y divide-slate-200/60 dark:divide-slate-800/60">
                         {filteredInventory.map((item) => (
-                          <tr key={item.id} className="hover:bg-slate-900/60 transition-colors">
-                            <td className="p-3.5 font-bold text-white flex items-center space-x-3">
-                              <img src={item.image} alt={item.name} className="w-8 h-8 rounded-xl object-cover border border-slate-700" />
-                              <span>{item.name}</span>
+                          <tr key={item.id} className="even:bg-slate-50/50 dark:even:bg-slate-900/30 hover:bg-purple-50/40 dark:hover:bg-slate-800/60 transition-colors border-b border-slate-200/60 dark:border-slate-800/50">
+                            <td className="px-5 py-4 font-bold text-slate-900 dark:text-white flex items-center space-x-3 whitespace-nowrap">
+                              <img src={item.image} alt={item.name} className="w-8 h-8 rounded-xl object-cover border border-slate-200 dark:border-slate-700 shrink-0" />
+                              <span className="truncate">{item.name}</span>
                             </td>
-                            <td className="p-3.5 font-medium text-slate-300">{item.shopName}</td>
-                            <td className="p-3.5 font-mono text-emerald-400 font-bold">${item.price} / {item.unit}</td>
-                            <td className="p-3.5 font-mono text-white">{item.availableQty} {item.unit}s</td>
-                            <td className="p-3.5 font-mono text-emerald-400 font-bold">{item.freshnessScore}%</td>
-                            <td className="p-3.5">
-                              <StatusBadge type="success" label="AI Verified" />
+                            <td className="px-5 py-4 font-medium text-slate-600 dark:text-slate-300 whitespace-nowrap">{item.shopName}</td>
+                            <td className="px-5 py-4 font-mono text-emerald-600 dark:text-emerald-400 font-bold whitespace-nowrap">₹{item.price} / {formatPriceUnit(item.unit)}</td>
+                            <td className="px-5 py-4 font-mono text-slate-900 dark:text-white font-semibold whitespace-nowrap">{item.availableQty} {formatQtyUnit(item.unit, item.availableQty)}</td>
+                            <td className="px-5 py-4 font-mono text-emerald-600 dark:text-emerald-400 font-bold whitespace-nowrap">{item.freshnessScore}%</td>
+                            <td className="px-5 py-4 whitespace-nowrap text-center">
+                              <span className="inline-flex items-center justify-center p-1 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400" title="AI Verified">
+                                <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                              </span>
                             </td>
                           </tr>
                         ))}
@@ -567,25 +589,25 @@ function AdminDashboardPageContent() {
                 transition={{ duration: 0.25 }}
                 className="space-y-6"
               >
-                <div className="bg-[#091122] rounded-3xl border border-slate-800/80 p-6 space-y-5 shadow-2xl">
+                <div className="bg-white dark:bg-[#091122] rounded-3xl border border-slate-200/80 dark:border-slate-800/80 p-6 space-y-5 shadow-xl">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div>
-                      <h3 className="text-lg font-extrabold text-white flex items-center">
-                        <Cpu className="w-5 h-5 text-purple-400 mr-2" />
-                        AI Extraction Log Inspector
+                      <h3 className="text-lg font-extrabold text-slate-900 dark:text-white flex items-center">
+                        <Cpu className="w-5 h-5 text-purple-500 mr-2" />
+                        Extraction Stream
                       </h3>
-                      <p className="text-xs text-slate-400">Detailed transcriptions, OCR confidence, and validation status.</p>
+                      <p className="text-xs text-slate-500 dark:text-slate-400">Detailed transcriptions, OCR confidence, and validation status.</p>
                     </div>
 
                     <div className="flex items-center space-x-3">
-                      <div className="flex items-center space-x-1 bg-slate-950 p-1 rounded-xl border border-slate-800 text-xs font-mono">
+                      <div className="flex items-center space-x-1 bg-slate-100 dark:bg-slate-950 p-1 rounded-xl border border-slate-200 dark:border-slate-800 text-xs font-mono">
                         {(['All', 'Validated', 'Flagged Review'] as const).map((st) => (
                           <button
                             key={st}
                             type="button"
                             onClick={() => setLogFilter(st)}
                             className={`px-3 py-1 rounded-lg transition-all ${
-                              logFilter === st ? 'bg-purple-500 text-white font-bold' : 'text-slate-400 hover:text-white'
+                              logFilter === st ? 'bg-purple-500 text-white font-bold' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                             }`}
                           >
                             {st}
@@ -594,47 +616,51 @@ function AdminDashboardPageContent() {
                       </div>
 
                       <div className="relative max-w-xs w-full">
-                        <Search className="w-4 h-4 text-slate-500 absolute left-3.5 top-3" />
+                        <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
                         <input
                           type="text"
                           placeholder="Search logs..."
                           value={searchTerm}
                           onChange={(e) => setSearchTerm(e.target.value)}
-                          className="w-full bg-slate-950 border border-slate-800 rounded-xl pl-9 pr-3.5 py-2 text-xs text-white focus:outline-none focus:border-purple-500"
+                          className="w-full bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl pl-9 pr-3.5 py-2 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-purple-500"
                         />
                       </div>
                     </div>
                   </div>
 
                   <div className="overflow-x-auto">
-                    <table className="w-full text-left text-xs text-slate-300">
-                      <thead className="bg-[#050A14] text-slate-400 uppercase font-mono text-[10px] tracking-wider border-b border-slate-800">
+                    <table className="w-full text-left text-xs text-slate-700 dark:text-slate-300 border-collapse">
+                      <thead className="bg-slate-100 dark:bg-[#050A14] text-slate-500 dark:text-slate-400 uppercase font-mono text-[10px] tracking-wider border-b border-slate-200 dark:border-slate-800">
                         <tr>
-                          <th className="p-3.5 rounded-l-xl">Log ID</th>
-                          <th className="p-3.5">Store Name</th>
-                          <th className="p-3.5">Input Type</th>
-                          <th className="p-3.5">Extracted Summary</th>
-                          <th className="p-3.5">Confidence</th>
-                          <th className="p-3.5 rounded-r-xl">Status</th>
+                          <th className="px-5 py-4 rounded-l-xl whitespace-nowrap">Log ID</th>
+                          <th className="px-5 py-4 whitespace-nowrap">Timestamp</th>
+                          <th className="px-5 py-4 whitespace-nowrap">Store Name</th>
+                          <th className="px-5 py-4 whitespace-nowrap">Input Type</th>
+                          <th className="px-5 py-4 whitespace-nowrap">Extracted Summary</th>
+                          <th className="px-5 py-4 whitespace-nowrap">Confidence</th>
+                          <th className="px-5 py-4 rounded-r-xl whitespace-nowrap">Status</th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-slate-800/60 font-mono">
+                      <tbody className="divide-y divide-slate-200/60 dark:divide-slate-800/60">
                         {filteredLogs.map((log) => (
-                          <tr key={log.id} className="hover:bg-slate-900/60 transition-colors">
-                            <td className="p-3.5 text-slate-500">{log.id}</td>
-                            <td className="p-3.5 font-bold text-white font-sans">{log.shopName}</td>
-                            <td className="p-3.5">
-                              <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-slate-800 text-purple-300 border border-slate-700">
-                                {log.inputType}
-                              </span>
+                          <tr
+                            key={log.id}
+                            className="even:bg-slate-50/50 dark:even:bg-slate-900/30 hover:bg-purple-50/40 dark:hover:bg-slate-800/60 transition-colors border-b border-slate-200/60 dark:border-slate-800/50"
+                          >
+                            <td className="px-5 py-4 font-mono text-purple-600 dark:text-purple-400 font-bold whitespace-nowrap">
+                              #LOG-{log.id.toUpperCase().replace('LOG-', '').padStart(4, '0')}
                             </td>
-                            <td className="p-3.5 text-slate-200">{log.extractedSummary}</td>
-                            <td className="p-3.5 text-emerald-400 font-bold">{log.confidenceScore}%</td>
-                            <td className="p-3.5">
-                              <StatusBadge
-                                type={log.status === 'Flagged Review' ? 'warning' : 'success'}
-                                label={log.status}
-                              />
+                            <td className="px-5 py-4 font-mono text-slate-500 dark:text-slate-400 whitespace-nowrap">{log.timestamp}</td>
+                            <td className="px-5 py-4 font-bold text-slate-900 dark:text-white font-sans whitespace-nowrap">{log.shopName}</td>
+                            <td className="px-5 py-4 whitespace-nowrap">
+                              {renderInputTypeBadge(log.inputType)}
+                            </td>
+                            <td className="px-5 py-4 font-mono text-slate-600 dark:text-slate-300 max-w-xs sm:max-w-md truncate">
+                              {log.extractedSummary}
+                            </td>
+                            <td className="px-5 py-4 font-mono text-emerald-600 dark:text-emerald-400 font-bold whitespace-nowrap">{log.confidenceScore}%</td>
+                            <td className="px-5 py-4 whitespace-nowrap">
+                              {renderStatusBadge(log.status)}
                             </td>
                           </tr>
                         ))}
@@ -655,36 +681,61 @@ function AdminDashboardPageContent() {
                 transition={{ duration: 0.25 }}
                 className="space-y-6"
               >
-                <div className="bg-[#091122] rounded-3xl border border-slate-800/80 p-6 space-y-5 shadow-2xl">
+                <div className="bg-white dark:bg-[#091122] rounded-3xl border border-slate-200/80 dark:border-slate-800/80 p-6 space-y-5 shadow-xl">
                   <div className="flex items-center justify-between">
-                    <div>
-                      <h3 className="text-lg font-extrabold text-white flex items-center">
-                        <TrendingUp className="w-5 h-5 text-amber-400 mr-2" />
-                        Hyperlocal Demand & Search Keyword Volume
+                    <div className="flex items-center space-x-2">
+                      <h3 className="text-base font-extrabold text-slate-900 dark:text-white flex items-center">
+                        <TrendingUp className="w-5 h-5 text-amber-500 mr-2" />
+                        Search Keywords
                       </h3>
-                      <p className="text-xs text-slate-400">Search volume vs local store inventory fulfillment rate.</p>
+                      <span className="px-2.5 py-0.5 rounded-full text-xs font-mono font-bold bg-amber-500/10 text-amber-700 dark:text-amber-300 border border-amber-500/20">
+                        {MOST_SEARCHED_PRODUCTS.length} terms
+                      </span>
                     </div>
                   </div>
 
                   <div className="overflow-x-auto">
-                    <table className="w-full text-left text-xs text-slate-300">
-                      <thead className="bg-[#050A14] text-slate-400 uppercase font-mono text-[10px] tracking-wider border-b border-slate-800">
+                    <table className="w-full text-left text-xs text-slate-700 dark:text-slate-300 border-collapse">
+                      <thead className="bg-slate-100 dark:bg-[#050A14] text-slate-500 dark:text-slate-400 uppercase font-mono text-[10px] tracking-wider border-b border-slate-200 dark:border-slate-800">
                         <tr>
-                          <th className="p-3.5 rounded-l-xl">Search Term</th>
-                          <th className="p-3.5">Category</th>
-                          <th className="p-3.5">Monthly Volume</th>
-                          <th className="p-3.5">Fulfillment Rate</th>
-                          <th className="p-3.5 rounded-r-xl">Trend</th>
+                          <th className="px-5 py-4 rounded-l-xl whitespace-nowrap">Search Term</th>
+                          <th className="px-5 py-4 whitespace-nowrap">Category</th>
+                          <th className="px-5 py-4 whitespace-nowrap text-right">Monthly Volume</th>
+                          <th className="px-5 py-4 whitespace-nowrap">Fulfillment Rate</th>
+                          <th className="px-5 py-4 rounded-r-xl whitespace-nowrap">Trend</th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-slate-800/60 font-mono">
+                      <tbody className="divide-y divide-slate-200/60 dark:divide-slate-800/60 font-mono">
                         {MOST_SEARCHED_PRODUCTS.map((kw) => (
-                          <tr key={kw.id} className="hover:bg-slate-900/60 transition-colors">
-                            <td className="p-3.5 font-bold text-white font-sans">{kw.term}</td>
-                            <td className="p-3.5 text-emerald-400">{kw.category}</td>
-                            <td className="p-3.5 text-white">{kw.searchVolume.toLocaleString()} searches</td>
-                            <td className="p-3.5 text-emerald-400 font-bold">{kw.fulfillmentRate}%</td>
-                            <td className="p-3.5 font-bold uppercase text-emerald-400">🔥 {kw.trend}</td>
+                          <tr key={kw.id} className="even:bg-slate-50/50 dark:even:bg-slate-900/30 hover:bg-purple-50/40 dark:hover:bg-slate-800/60 transition-colors border-b border-slate-200/60 dark:border-slate-800/50">
+                            <td className="px-5 py-4 font-bold text-slate-900 dark:text-white font-sans whitespace-nowrap">{kw.term}</td>
+                            <td className="px-5 py-4 whitespace-nowrap">
+                              <span className="px-2.5 py-1 rounded-md text-xs font-sans font-medium bg-slate-100 dark:bg-slate-800/80 text-slate-700 dark:text-slate-300 border border-slate-200/80 dark:border-slate-700/80 whitespace-nowrap">
+                                {kw.category}
+                              </span>
+                            </td>
+                            <td className="px-5 py-4 text-slate-900 dark:text-white font-bold whitespace-nowrap text-right">{kw.searchVolume.toLocaleString()}</td>
+                            <td className="px-5 py-4 text-emerald-600 dark:text-emerald-400 font-bold whitespace-nowrap">{kw.fulfillmentRate}%</td>
+                            <td className="px-5 py-4 whitespace-nowrap">
+                              {kw.trend === 'up' && (
+                                <span className="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 whitespace-nowrap">
+                                  <TrendingUp className="w-3.5 h-3.5" />
+                                  <span>Up</span>
+                                </span>
+                              )}
+                              {kw.trend === 'stable' && (
+                                <span className="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700 whitespace-nowrap">
+                                  <Minus className="w-3.5 h-3.5" />
+                                  <span>Stable</span>
+                                </span>
+                              )}
+                              {kw.trend === 'down' && (
+                                <span className="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20 whitespace-nowrap">
+                                  <TrendingDown className="w-3.5 h-3.5" />
+                                  <span>Down</span>
+                                </span>
+                              )}
+                            </td>
                           </tr>
                         ))}
                       </tbody>
@@ -695,8 +746,6 @@ function AdminDashboardPageContent() {
             )}
           </AnimatePresence>
         </main>
-      </div>
-    </div>
+    </>
   );
 }
-

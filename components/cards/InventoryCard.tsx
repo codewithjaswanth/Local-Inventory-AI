@@ -30,6 +30,9 @@ export const InventoryCard: React.FC<InventoryCardProps> = ({ item, shopName, on
               src={item.image || "https://images.unsplash.com/photo-1592924357228-91a4daadcfea?auto=format&fit=crop&w=300&q=80"}
               alt={item.name}
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+              onError={(e) => {
+                e.currentTarget.src = 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=300&q=80';
+              }}
             />
           </div>
           <div>

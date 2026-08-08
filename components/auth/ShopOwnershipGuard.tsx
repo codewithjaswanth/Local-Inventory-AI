@@ -34,10 +34,10 @@ export const ShopOwnershipGuard: React.FC<ShopOwnershipGuardProps> = ({
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-[#060B14] text-white flex items-center justify-center p-4 select-none">
+      <div className="min-h-screen bg-slate-50 dark:bg-[#060B14] text-slate-900 dark:text-white flex items-center justify-center p-4 select-none transition-colors">
         <div className="text-center space-y-3">
-          <Loader2 className="w-8 h-8 text-emerald-400 animate-spin mx-auto" />
-          <p className="text-xs text-slate-400 font-mono">Verifying store ownership permissions...</p>
+          <Loader2 className="w-8 h-8 text-emerald-500 dark:text-emerald-400 animate-spin mx-auto" />
+          <p className="text-xs text-slate-500 dark:text-slate-400 font-mono">Verifying store ownership permissions...</p>
         </div>
       </div>
     );
@@ -45,11 +45,11 @@ export const ShopOwnershipGuard: React.FC<ShopOwnershipGuardProps> = ({
 
   if (!isAuthorized) {
     return (
-      <div className="min-h-screen bg-[#040810] text-white flex items-center justify-center p-6 select-none">
+      <div className="min-h-screen bg-slate-50 dark:bg-[#040810] text-slate-900 dark:text-white flex items-center justify-center p-6 select-none transition-colors">
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="max-w-md w-full bg-[#090F1D] border border-rose-500/30 rounded-3xl p-8 text-center space-y-4 shadow-2xl"
+          className="max-w-md w-full bg-white dark:bg-[#090F1D] border border-rose-500/30 rounded-3xl p-8 text-center space-y-4 shadow-xl dark:shadow-2xl"
         >
           <div className="w-14 h-14 rounded-2xl bg-rose-500/10 border border-rose-500/30 text-rose-400 flex items-center justify-center mx-auto shadow-lg">
             <ShieldAlert className="w-7 h-7" />

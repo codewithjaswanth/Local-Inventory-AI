@@ -1,9 +1,8 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
-import { HOW_IT_WORKS_STEPS } from '@/data/mockData';
-import { Camera, Mic, Cpu, Search, Navigation, Star, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { Camera, Cpu, Navigation } from 'lucide-react';
 
 export const HowItWorks: React.FC = () => {
   const steps = [
@@ -53,11 +52,11 @@ export const HowItWorks: React.FC = () => {
           {steps.map((step, idx) => (
             <motion.div
               key={step.num}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: idx * 0.1 }}
-              className="p-6 sm:p-7 rounded-3xl bg-white/90 dark:bg-[#091122]/90 backdrop-blur-xl border border-slate-200/80 dark:border-slate-800/80 shadow-md hover:shadow-xl transition-all flex flex-col justify-between"
+              transition={{ duration: 0.35, delay: idx * 0.08, ease: [0.16, 1, 0.3, 1] }}
+              className="p-6 sm:p-7 rounded-3xl bg-white/90 dark:bg-[#091122]/90 backdrop-blur-xl border border-slate-200/80 dark:border-slate-800/80 shadow-md hover:shadow-xl transition-all duration-300 flex flex-col justify-between"
             >
               <div>
                 <div className="flex items-center justify-between mb-5">

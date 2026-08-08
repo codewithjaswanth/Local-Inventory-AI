@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Sparkles, Twitter, Github, Linkedin, Instagram } from 'lucide-react';
+import { Twitter, Github, Linkedin, Instagram } from 'lucide-react';
 import { APP_CONFIG, NAV_LINKS } from '@/constants';
 import { ThemeToggle } from '../ui/ThemeToggle';
 import { Logo } from '../ui/Logo';
@@ -65,6 +65,8 @@ export const Footer: React.FC = () => {
               Management & Portals
             </h4>
             <ul className="space-y-2.5 text-sm font-medium">
+              <li><a href="/login" className="hover:text-emerald-400 transition-colors">Sign In</a></li>
+              <li><a href="/signup" className="hover:text-emerald-400 transition-colors">Register Account</a></li>
               <li><a href="/dashboard" className="hover:text-emerald-400 transition-colors">Shopkeeper Portal</a></li>
               <li><a href="/admin" className="hover:text-emerald-400 transition-colors">Admin Console</a></li>
               <li><a href="/profile" className="hover:text-emerald-400 transition-colors">Customer Profile</a></li>

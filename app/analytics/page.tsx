@@ -106,7 +106,7 @@ function AnalyticsPageContent() {
 
               <div className="space-y-3 text-xs font-mono">
                 {[
-                  { term: 'Organic Tomatoes', count: '1,420 searches', share: '32%' },
+                  { term: 'Cotton Shirts', count: '1,420 searches', share: '32%' },
                   { term: 'Hass Avocados', count: '1,190 searches', share: '27%' },
                   { term: 'Fresh Sourdough Bread', count: '890 searches', share: '20%' },
                   { term: 'Farm Glass Bottle Milk', count: '640 searches', share: '14%' },

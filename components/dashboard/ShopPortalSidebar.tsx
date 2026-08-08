@@ -69,7 +69,6 @@ export const ShopPortalSidebar: React.FC<ShopPortalSidebarProps> = ({ activePath
   } else if (isCustomer) {
     navItems = [
       { name: 'Marketplace Home', href: '/', icon: Home },
-      { name: 'Search Produce', href: '/search', icon: Search },
       { name: 'Nearby Shops', href: '/shops', icon: Store },
       { name: 'My Orders', href: '/orders', icon: ShoppingBag },
       { name: 'Profile', href: '/profile', icon: Store },
@@ -85,7 +84,7 @@ export const ShopPortalSidebar: React.FC<ShopPortalSidebarProps> = ({ activePath
 
   return (
     <aside
-      className={`hidden lg:flex flex-col bg-[#060B14] border-r border-slate-800/80 flex-shrink-0 min-h-screen text-slate-300 transition-all duration-300 relative select-none ${
+      className={`hidden lg:flex flex-col bg-white dark:bg-[#060B14] border-r border-slate-200 dark:border-slate-800/80 flex-shrink-0 min-h-screen text-slate-700 dark:text-slate-300 transition-all duration-300 relative select-none ${
         collapsed ? 'w-20' : 'w-64'
       }`}
     >
@@ -93,14 +92,14 @@ export const ShopPortalSidebar: React.FC<ShopPortalSidebarProps> = ({ activePath
       <button
         type="button"
         onClick={() => setCollapsed(!collapsed)}
-        className="absolute -right-3.5 top-7 z-50 w-7 h-7 rounded-full bg-slate-800 border border-slate-700 text-slate-300 hover:text-white flex items-center justify-center shadow-lg transition-transform hover:scale-110"
+        className="absolute -right-3.5 top-7 z-50 w-7 h-7 rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white flex items-center justify-center shadow-lg transition-transform hover:scale-110"
         aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
       >
         {collapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
       </button>
 
       {/* Brand & Workspace Header */}
-      <div className="p-4 border-b border-slate-800/80">
+      <div className="p-4 border-b border-slate-200 dark:border-slate-800/80">
         <a href="/" className="flex items-center space-x-3 overflow-hidden">
           <Logo size="sm" showText={false} />
 

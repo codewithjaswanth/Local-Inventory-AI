@@ -46,7 +46,11 @@ const config: Config = {
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'hero-pattern': 'radial-gradient(circle at 50% 0%, rgba(16, 185, 129, 0.08) 0%, rgba(255, 255, 255, 0) 70%)',
-      }
+      },
+      transitionTimingFunction: {
+        'out-expo': 'cubic-bezier(0.16, 1, 0.3, 1)',
+        'spring': 'cubic-bezier(0.34, 1.56, 0.64, 1)',
+      },
     },
   },
   plugins: [],

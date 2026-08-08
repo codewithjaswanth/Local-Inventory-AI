@@ -1,7 +1,7 @@
 export interface ExtractedAiItem {
   id: string;
   name: string;
-  category: 'Vegetables' | 'Fruits' | 'Dairy' | 'Bakery' | 'Groceries';
+  category: string;
   price: number;
   quantity: number;
   unit: string;

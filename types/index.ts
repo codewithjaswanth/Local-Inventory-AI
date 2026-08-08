@@ -2,8 +2,10 @@ export interface Category {
   id: string;
   name: string;
   icon: string;
+  image?: string;
   itemCount: number;
   popularItems: string[];
+  subcategories?: string[];
   gradient: string;
   accentBg: string;
   accentText: string;

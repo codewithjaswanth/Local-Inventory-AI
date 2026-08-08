@@ -95,6 +95,52 @@ export async function getCityOrVillageFromCoords(lat: number, lng: number): Prom
   return fallbackName;
 }
 
+export const PRESET_CITY_COORDS: Record<string, { lat: number; lng: number }> = {
+  'Tadikonda, Andhra Pradesh': { lat: 16.426, lng: 80.448 },
+  'Guntur Main City, AP': { lat: 16.306, lng: 80.436 },
+  'Vijayawada Central, AP': { lat: 16.506, lng: 80.648 },
+  'Mangalagiri, AP': { lat: 16.438, lng: 80.558 },
+  'Tenali Town, AP': { lat: 16.243, lng: 80.640 },
+  'Amaravati Capital Region, AP': { lat: 16.513, lng: 80.516 },
+  'Hyderabad, Telangana': { lat: 17.385, lng: 78.486 },
+  'Visakhapatnam, AP': { lat: 17.686, lng: 83.218 },
+  'Bengaluru, Karnataka': { lat: 12.971, lng: 77.594 },
+};
+
+/**
+ * Converts a search string into latitude/longitude coordinates via Nominatim API.
+ */
+export async function geocodeCityNameToCoords(cityName: string): Promise<UserCoordinates | null> {
+  const normalized = cityName.trim();
+  if (PRESET_CITY_COORDS[normalized]) {
+    return { latitude: PRESET_CITY_COORDS[normalized].lat, longitude: PRESET_CITY_COORDS[normalized].lng };
+  }
+
+  // Check partial key match in preset coords
+  for (const [key, coords] of Object.entries(PRESET_CITY_COORDS)) {
+    if (key.toLowerCase().includes(normalized.toLowerCase()) || normalized.toLowerCase().includes(key.toLowerCase())) {
+      return { latitude: coords.lat, longitude: coords.lng };
+    }
+  }
+
+  try {
+    const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(normalized)}&limit=1`);
+    if (res.ok) {
+      const data = await res.json();
+      if (data && data.length > 0) {
+        return {
+          latitude: parseFloat(data[0].lat),
+          longitude: parseFloat(data[0].lon)
+        };
+      }
+    }
+  } catch (err) {
+    console.warn('Geocoding query error:', err);
+  }
+
+  return null;
+}
+
 /**
  * Retrieves the user's current GPS coordinates using the browser Geolocation API.
  */

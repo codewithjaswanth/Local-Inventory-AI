@@ -15,44 +15,35 @@ export const RoleBasedNavigation: React.FC<{
   onLinkClick?: () => void;
 }> = ({ className = '', linkClassName = '', onLinkClick }) => {
   const pathname = usePathname();
-  const { role, isCustomer, isShopkeeper, isAdmin } = useRole();
+  const { isShopkeeper, isAdmin } = useRole();
 
   let navItems: NavItem[] = [];
 
   if (isAdmin) {
     navItems = [
-      { name: 'Dashboard', href: '/admin' },
-      { name: 'Users', href: '/admin/users' },
-      { name: 'Shops', href: '/admin/shops' },
-      { name: 'AI Monitor', href: '/admin/ai-monitor' },
-      { name: 'Reports', href: '/admin/reports' },
-      { name: 'Audit Logs', href: '/admin/audit-logs' },
+      { name: 'Admin Console', href: '/admin' },
     ];
   } else if (isShopkeeper) {
     navItems = [
       { name: 'Home', href: '/' },
-      { name: 'Search', href: '/search' },
-      { name: 'Dashboard', href: '/dashboard' },
-    ];
-  } else if (isCustomer) {
-    navItems = [
-      { name: 'Home', href: '/' },
-      { name: 'AI Search', href: '/search' },
-      { name: 'Marketplace', href: '/marketplace' },
+      { name: 'Categories', href: '/categories' },
+      { name: 'Shops', href: '/shops' },
+      { name: 'Shop Portal', href: '/dashboard' },
     ];
   } else {
-    // Unauthenticated user
+    // Unauthenticated user or Customer
     navItems = [
       { name: 'Home', href: '/' },
-      { name: 'AI Search', href: '/search' },
-      { name: 'Marketplace', href: '/marketplace' },
+      { name: 'Categories', href: '/categories' },
+      { name: 'Shops', href: '/shops' },
     ];
   }
 
   return (
     <nav className={className}>
       {navItems.map((item) => {
-        const isActive = pathname === item.href || (item.href !== '/' && pathname?.startsWith(item.href));
+        const isActive =
+          pathname === item.href || (item.href !== '/' && pathname?.startsWith(item.href));
         return (
           <a
             key={item.href}
@@ -60,8 +51,8 @@ export const RoleBasedNavigation: React.FC<{
             onClick={onLinkClick}
             className={`${linkClassName} whitespace-nowrap transition-all ${
               isActive
-                ? 'bg-white dark:bg-slate-700/90 text-emerald-600 dark:text-emerald-400 font-bold shadow-xs'
-                : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-white/60 dark:hover:bg-slate-700/50'
+                ? 'bg-purple-600 text-white font-extrabold shadow-sm shadow-purple-500/20'
+                : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/60 dark:hover:bg-slate-700/50'
             }`}
           >
             <span className="whitespace-nowrap">{item.name}</span>
