@@ -18,9 +18,10 @@ interface ProductCardProps {
 export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelectShop }) => {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 15 }}
+      initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      whileHover={{ y: -4, transition: { duration: 0.2 } }}
+      whileHover={{ y: -3, scale: 1.01 }}
+      transition={{ type: 'spring', damping: 26, stiffness: 340 }}
     >
       <Card className="group overflow-hidden flex flex-col justify-between h-full">
         <div>

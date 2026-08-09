@@ -23,7 +23,7 @@ export const POPULAR_CATEGORIES: Category[] = [
     id: 'bath-body',
     name: 'Bath & Body',
     icon: 'Smile',
-    image: 'https://images.unsplash.com/photo-1535585209827-a15fcdbc4c2d?auto=format&fit=crop&w=300&q=80',
+    image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=600&q=80',
     itemCount: 1420,
     popularItems: [
       'Bathing Soaps',
@@ -62,7 +62,7 @@ export const POPULAR_CATEGORIES: Category[] = [
     id: 'hair-care',
     name: 'Hair',
     icon: 'Sparkles',
-    image: 'https://images.unsplash.com/photo-1527799820374-dcf8d9d4a388?auto=format&fit=crop&w=300&q=80',
+    image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=600&q=80',
     itemCount: 1250,
     popularItems: [
       'Shampoo',
@@ -93,7 +93,7 @@ export const POPULAR_CATEGORIES: Category[] = [
     id: 'skin-face',
     name: 'Skin & Face',
     icon: 'Sparkles',
-    image: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=300&q=80',
+    image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=600&q=80',
     itemCount: 1890,
     popularItems: [
       'Sunscreen',
@@ -130,7 +130,7 @@ export const POPULAR_CATEGORIES: Category[] = [
     id: 'beauty-cosmetics',
     name: 'Beauty & Cosmetics',
     icon: 'Sparkles',
-    image: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&w=300&q=80',
+    image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=600&q=80',
     itemCount: 2300,
     popularItems: [
       'Lipstick & Gloss',
@@ -165,7 +165,7 @@ export const POPULAR_CATEGORIES: Category[] = [
     id: 'feminine-hygiene',
     name: 'Feminine Hygiene',
     icon: 'Heart',
-    image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=300&q=80',
+    image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=600&q=80',
     itemCount: 980,
     popularItems: [
       'Sanitary Pads',
@@ -194,7 +194,7 @@ export const POPULAR_CATEGORIES: Category[] = [
     id: 'baby-care-qc',
     name: 'Baby Care',
     icon: 'Baby',
-    image: 'https://images.unsplash.com/photo-1519689680058-324335c77eba?auto=format&fit=crop&w=300&q=80',
+    image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=600&q=80',
     itemCount: 1640,
     popularItems: [
       'Diaper & Wipes',
@@ -231,7 +231,7 @@ export const POPULAR_CATEGORIES: Category[] = [
     id: 'health-pharma',
     name: 'Health & Pharma',
     icon: 'HeartPulse',
-    image: 'https://images.unsplash.com/photo-1471864190281-a93a3070b6de?auto=format&fit=crop&w=300&q=80',
+    image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=600&q=80',
     itemCount: 2150,
     popularItems: [
       'Fever & Pain Relief',
@@ -282,7 +282,7 @@ export const POPULAR_CATEGORIES: Category[] = [
     id: 'sexual-wellness',
     name: 'Sexual Wellness',
     icon: 'Heart',
-    image: 'https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?auto=format&fit=crop&w=300&q=80',
+    image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=600&q=80',
     itemCount: 650,
     popularItems: [
       'Massagers',
@@ -311,7 +311,7 @@ export const POPULAR_CATEGORIES: Category[] = [
     id: 'vegetables-fruits',
     name: 'Vegetables & Fruits',
     icon: 'Apple',
-    image: 'https://images.unsplash.com/photo-1610832958506-aa56368176cf?auto=format&fit=crop&w=300&q=80',
+    image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=600&q=80',
     itemCount: 2890,
     popularItems: [
       'Fresh Vegetables',
@@ -346,7 +346,7 @@ export const POPULAR_CATEGORIES: Category[] = [
     id: 'atta-rice-dal',
     name: 'Atta, Rice & Dal',
     icon: 'Package',
-    image: 'https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=300&q=80',
+    image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=600&q=80',
     itemCount: 2100,
     popularItems: [
       'Atta',
@@ -379,7 +379,7 @@ export const POPULAR_CATEGORIES: Category[] = [
     id: 'oil-ghee-masala',
     name: 'Oil, Ghee & Masala',
     icon: 'Flame',
-    image: 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=300&q=80',
+    image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=600&q=80',
     itemCount: 1950,
     popularItems: [
       'Oil',
@@ -414,7 +414,7 @@ export const POPULAR_CATEGORIES: Category[] = [
     id: 'dairy-bread-eggs',
     name: 'Dairy, Bread & Eggs',
     icon: 'Milk',
-    image: 'https://images.unsplash.com/photo-1563636619-e9143da7973b?auto=format&fit=crop&w=300&q=80',
+    image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=600&q=80',
     itemCount: 2400,
     popularItems: [
       'Milk',
@@ -449,7 +449,7 @@ export const POPULAR_CATEGORIES: Category[] = [
     id: 'bakery-biscuits',
     name: 'Bakery & Biscuits',
     icon: 'Cookie',
-    image: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=300&q=80',
+    image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=600&q=80',
     itemCount: 1780,
     popularItems: [
       'Cookies',
@@ -484,7 +484,7 @@ export const POPULAR_CATEGORIES: Category[] = [
     id: 'dry-fruits-cereals',
     name: 'Dry Fruits & Cereals',
     icon: 'Package',
-    image: 'https://images.unsplash.com/photo-1509358271058-acd02cc93858?auto=format&fit=crop&w=300&q=80',
+    image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=600&q=80',
     itemCount: 1350,
     popularItems: [
       'Dry Fruits',
@@ -519,7 +519,7 @@ export const POPULAR_CATEGORIES: Category[] = [
     id: 'chicken-meat-fish',
     name: 'Chicken, Meat & Fish',
     icon: 'UtensilsCrossed',
-    image: 'https://images.unsplash.com/photo-1604503468506-a8da13d82791?auto=format&fit=crop&w=300&q=80',
+    image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=600&q=80',
     itemCount: 890,
     popularItems: [
       'Chicken',
@@ -556,7 +556,7 @@ export const POPULAR_CATEGORIES: Category[] = [
     id: 'kitchenware-appliances',
     name: 'Kitchenware & Appliances',
     icon: 'Utensils',
-    image: 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=300&q=80',
+    image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=600&q=80',
     itemCount: 1620,
     popularItems: [
       'Bottles & Flasks',
@@ -593,7 +593,7 @@ export const POPULAR_CATEGORIES: Category[] = [
     id: 'chips-namkeen',
     name: 'Chips & Namkeen',
     icon: 'Cookie',
-    image: 'https://images.unsplash.com/photo-1566478989037-eec170784d0b?auto=format&fit=crop&w=300&q=80',
+    image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=600&q=80',
     itemCount: 2150,
     popularItems: [
       'Chips & Wafers',
@@ -626,7 +626,7 @@ export const POPULAR_CATEGORIES: Category[] = [
     id: 'sweets-chocolates',
     name: 'Sweets & Chocolates',
     icon: 'Sparkles',
-    image: 'https://images.unsplash.com/photo-1582293041079-7814c2f12063?auto=format&fit=crop&w=300&q=80',
+    image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=600&q=80',
     itemCount: 1890,
     popularItems: [
       'Chocolates',
@@ -657,7 +657,7 @@ export const POPULAR_CATEGORIES: Category[] = [
     id: 'drinks-juices',
     name: 'Drinks & Juices',
     icon: 'GlassWater',
-    image: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&w=300&q=80',
+    image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=600&q=80',
     itemCount: 1980,
     popularItems: [
       'Soft Drinks',
@@ -700,133 +700,384 @@ export const POPULAR_CATEGORIES: Category[] = [
     id: 'tea-coffee-milk',
     name: 'Tea, Coffee & Milk Drinks',
     icon: 'Coffee',
-    image: 'https://images.unsplash.com/photo-1576092768241-dec231879fc3?auto=format&fit=crop&w=300&q=80',
+    image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=600&q=80',
     itemCount: 1750,
-    popularItems: ['Green Tea', 'Instant Coffee', 'Chocolate Milk Mix', 'Masala Chai'],
+    popularItems: [
+      'Tea',
+      'Coffee',
+      'Hot Chocolate',
+      'Green Tea',
+      'Milk Drinks',
+      'Cold Coffee & Ice Tea',
+      'Bags & Premixes',
+      'Premium',
+      'Herbal Infusion'
+    ],
+    subcategories: [
+      'Tea',
+      'Coffee',
+      'Hot Chocolate',
+      'Green Tea',
+      'Milk Drinks',
+      'Cold Coffee & Ice Tea',
+      'Bags & Premixes',
+      'Premium',
+      'Herbal Infusion'
+    ],
     gradient: 'from-amber-600 to-emerald-700',
     accentBg: 'bg-amber-50',
     accentText: 'text-amber-600',
-    description: 'Premium leaf tea, roasted instant coffee, green tea bags, and health drinks.'
+    description: 'Tea, Coffee, Hot Chocolate, Green Tea, Milk Drinks, Cold Coffee & Ice Tea, Bags & Premixes, Premium, Herbal Infusion.'
   },
   {
     id: 'instant-food',
     name: 'Instant Food',
     icon: 'Flame',
-    image: 'https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&w=300&q=80',
+    image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=600&q=80',
     itemCount: 1680,
-    popularItems: ['Instant Noodles', 'Ready Poha', 'Cup Soup', 'Frozen Fries'],
+    popularItems: [
+      'Noodles',
+      'Frozen Veg Snacks',
+      'Pasta',
+      'Frozen Non-Veg Snacks',
+      'Soup',
+      'Ready to Eat',
+      'Idli & Dosa Batter',
+      'Dessert & Cake Mixes',
+      'Organic & Premium',
+      'Energy Bars'
+    ],
+    subcategories: [
+      'Noodles',
+      'Frozen Veg Snacks',
+      'Pasta',
+      'Frozen Non-Veg Snacks',
+      'Soup',
+      'Ready to Eat',
+      'Idli & Dosa Batter',
+      'Dessert & Cake Mixes',
+      'Organic & Premium',
+      'Energy Bars'
+    ],
     gradient: 'from-red-500 to-amber-500',
     accentBg: 'bg-red-50',
     accentText: 'text-red-600',
-    description: 'Quick instant noodles, ready-to-eat meals, soups, and frozen snacks.'
+    description: 'Noodles, Frozen Veg Snacks, Pasta, Frozen Non-Veg Snacks, Soup, Ready to Eat, Idli & Dosa Batter, Dessert & Cake Mixes, Organic & Premium, Energy Bars.'
   },
   {
     id: 'sauces-spreads',
     name: 'Sauces & Spreads',
     icon: 'GlassWater',
-    image: 'https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&fit=crop&w=300&q=80',
+    image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=600&q=80',
     itemCount: 1240,
-    popularItems: ['Tomato Ketchup', 'Peanut Butter', 'Mayonnaise', 'Fruit Jams'],
+    popularItems: [
+      'Tomato Ketchup',
+      'Jam & Spreads',
+      'Mayonnaise',
+      'Chutney & Pickle',
+      'Peanut Butter',
+      'Asian Sauces',
+      'Chyawanprash & Honey',
+      'Syrups',
+      'Dips & Salad Dressings',
+      'Cooking Sauces',
+      'Premium'
+    ],
+    subcategories: [
+      'Tomato Ketchup',
+      'Jam & Spreads',
+      'Mayonnaise',
+      'Chutney & Pickle',
+      'Peanut Butter',
+      'Asian Sauces',
+      'Chyawanprash & Honey',
+      'Syrups',
+      'Dips & Salad Dressings',
+      'Cooking Sauces',
+      'Premium'
+    ],
     gradient: 'from-rose-500 to-red-600',
     accentBg: 'bg-rose-50',
     accentText: 'text-rose-600',
-    description: 'Tomato ketchups, mayonnaise, crunchy peanut butter, fruit jams, and honey.'
+    description: 'Tomato Ketchup, Jam & Spreads, Mayonnaise, Chutney & Pickle, Peanut Butter, Asian Sauces, Chyawanprash & Honey, Syrups, Dips & Salad Dressings, Cooking Sauces, Premium.'
   },
   {
     id: 'paan-corner',
     name: 'Paan Corner',
     icon: 'Sparkles',
-    image: 'https://images.unsplash.com/photo-1626200419199-391ae4be7a41?auto=format&fit=crop&w=300&q=80',
+    image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=600&q=80',
     itemCount: 540,
-    popularItems: ['Sweet Meetha Paan', 'Mouth Fresheners', 'Elaichi', 'Chocolates'],
+    popularItems: [
+      'Cigarettes',
+      'Lighters',
+      'Cigar',
+      'Rolling Needs',
+      'Hookah Needs',
+      'Rolling Tobacco',
+      'Paan Masala',
+      'Ashtrays',
+      'Mouth Fresheners & Gums',
+      'Non-Tobacco Blends',
+      'Smoking Cessation'
+    ],
+    subcategories: [
+      'Cigarettes',
+      'Lighters',
+      'Cigar',
+      'Rolling Needs',
+      'Hookah Needs',
+      'Rolling Tobacco',
+      'Paan Masala',
+      'Ashtrays',
+      'Mouth Fresheners & Gums',
+      'Non-Tobacco Blends',
+      'Smoking Cessation'
+    ],
     gradient: 'from-emerald-500 to-green-600',
     accentBg: 'bg-emerald-50',
     accentText: 'text-emerald-600',
-    description: 'Fresh mouth fresheners, paan essentials, mints, and cardamoms.'
+    description: 'Cigarettes, Lighters, Cigar, Rolling Needs, Hookah Needs, Rolling Tobacco, Paan Masala, Ashtrays, Mouth Fresheners & Gums, Non-Tobacco Blends, Smoking Cessation.'
   },
   {
     id: 'ice-creams-more',
     name: 'Ice Creams & More',
     icon: 'Sparkles',
-    image: 'https://images.unsplash.com/photo-1567206563064-6f60f4078b57?auto=format&fit=crop&w=300&q=80',
+    image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=600&q=80',
     itemCount: 1320,
-    popularItems: ['Vanilla Tubs', 'Chocolate Cones', 'Kulfi Pops', 'Ice Cream Sandwich'],
+    popularItems: [
+      'Tubs',
+      'Sticks',
+      'Cones',
+      'Cassata & Sandwich',
+      'Single Serve Cups',
+      'Cakes & Others',
+      'Guilt-Free',
+      'Gourmet',
+      'Syrups'
+    ],
+    subcategories: [
+      'Tubs',
+      'Sticks',
+      'Cones',
+      'Cassata & Sandwich',
+      'Single Serve Cups',
+      'Cakes & Others',
+      'Guilt-Free',
+      'Gourmet',
+      'Syrups'
+    ],
     gradient: 'from-cyan-400 to-blue-500',
     accentBg: 'bg-cyan-50',
     accentText: 'text-cyan-600',
-    description: 'Delicious ice cream tubs, chocolate cones, kulfis, and frozen desserts.'
+    description: 'Tubs, Sticks, Cones, Cassata & Sandwich, Single Serve Cups, Cakes & Others, Guilt-Free, Gourmet, Syrups.'
   },
   {
     id: 'home-lifestyle',
     name: 'Home & Lifestyle',
     icon: 'Home',
-    image: 'https://images.unsplash.com/photo-1583485088034-697b5bc54ccd?auto=format&fit=crop&w=300&q=80',
+    image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=600&q=80',
     itemCount: 2450,
-    popularItems: ['Cushion Covers', 'Storage Baskets', 'Curtains', 'Table Runners'],
+    popularItems: [
+      'Home Decor',
+      'Plants & Bouquets',
+      'Bedsheets & Towels',
+      'Gardening',
+      'Decorative Lights',
+      'Home Needs',
+      'Tissues & Disposables',
+      'Jewellery',
+      'Innerwear',
+      'Lifestyle Accessories',
+      'Party & Festive Needs',
+      'Socks & Handkerchiefs',
+      'Fresheners',
+      'Pooja Needs',
+      'Bathroom Essentials',
+      'Bags'
+    ],
+    subcategories: [
+      'Home Decor',
+      'Plants & Bouquets',
+      'Bedsheets & Towels',
+      'Gardening',
+      'Decorative Lights',
+      'Home Needs',
+      'Tissues & Disposables',
+      'Jewellery',
+      'Innerwear',
+      'Lifestyle Accessories',
+      'Party & Festive Needs',
+      'Socks & Handkerchiefs',
+      'Fresheners',
+      'Pooja Needs',
+      'Bathroom Essentials',
+      'Bags'
+    ],
     gradient: 'from-slate-500 to-zinc-600',
     accentBg: 'bg-slate-50',
     accentText: 'text-slate-600',
-    description: 'Home furnishings, cushion covers, storage baskets, and interior essentials.'
+    description: 'Home Decor, Plants & Bouquets, Bedsheets & Towels, Gardening, Decorative Lights, Home Needs, Tissues & Disposables, Jewellery, Innerwear, Lifestyle Accessories, Party & Festive Needs, Socks & Handkerchiefs, Fresheners, Pooja Needs, Bathroom Essentials, Bags.'
   },
   {
     id: 'cleaners-repellents',
     name: 'Cleaners & Repellents',
     icon: 'Sparkles',
-    image: 'https://images.unsplash.com/photo-1585421514284-efb74c2b69ba?auto=format&fit=crop&w=300&q=80',
+    image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=600&q=80',
     itemCount: 1890,
-    popularItems: ['Floor Cleaner', 'Mosquito Repellent Liquid', 'Dishwash Gel', 'Toilet Cleaners'],
+    popularItems: [
+      'Repellents & Disinfectants',
+      'Detergent Powder & Bars',
+      'Liquid Detergents',
+      'Laundry Additives',
+      'Dishwashing Gels & Bars',
+      'Dishwashing Accessories',
+      'Toilet Cleaners',
+      'Floor Cleaners',
+      'Cleaning Tools',
+      'Garbage Bags',
+      'Glass, Metal Cleaners & Others',
+      'Shoe Care',
+      'Machine & Car Care',
+      'Household Appliance Cleaners'
+    ],
+    subcategories: [
+      'Repellents & Disinfectants',
+      'Detergent Powder & Bars',
+      'Liquid Detergents',
+      'Laundry Additives',
+      'Dishwashing Gels & Bars',
+      'Dishwashing Accessories',
+      'Toilet Cleaners',
+      'Floor Cleaners',
+      'Cleaning Tools',
+      'Garbage Bags',
+      'Glass, Metal Cleaners & Others',
+      'Shoe Care',
+      'Machine & Car Care',
+      'Household Appliance Cleaners'
+    ],
     gradient: 'from-teal-500 to-cyan-600',
     accentBg: 'bg-teal-50',
     accentText: 'text-teal-600',
-    description: 'Surface floor cleaners, dishwash gels, mosquito repellents, and hygiene.'
+    description: 'Repellents & Disinfectants, Detergent Powder & Bars, Liquid Detergents, Laundry Additives, Dishwashing Gels & Bars, Dishwashing Accessories, Toilet Cleaners, Floor Cleaners, Cleaning Tools, Garbage Bags, Glass, Metal Cleaners & Others, Shoe Care, Machine & Car Care, Household Appliance Cleaners.'
   },
   {
     id: 'electronics',
     name: 'Electronics',
     icon: 'Cpu',
-    image: 'https://images.unsplash.com/photo-1550009158-9ebf69173e03?auto=format&fit=crop&w=300&q=80',
+    image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=600&q=80',
     itemCount: 1780,
-    popularItems: ['USB-C Cables', 'Power Banks', 'Earbuds', 'Phone Stands'],
+    popularItems: [
+      'Trimmers & Hair Appliances',
+      'Earphones & Headsets',
+      'Speakers',
+      'Mobile & Computer',
+      'Decorative Lights',
+      'Chargers & Cables',
+      'Smart Watches',
+      'Kitchen Appliances',
+      'Laptop & Mobile Phones',
+      'Batteries',
+      'Extension Cables & Accessories',
+      'Home Appliances',
+      'Music Instruments & Accessories',
+      'Electronics E-Card'
+    ],
+    subcategories: [
+      'Trimmers & Hair Appliances',
+      'Earphones & Headsets',
+      'Speakers',
+      'Mobile & Computer',
+      'Decorative Lights',
+      'Chargers & Cables',
+      'Smart Watches',
+      'Kitchen Appliances',
+      'Laptop & Mobile Phones',
+      'Batteries',
+      'Extension Cables & Accessories',
+      'Home Appliances',
+      'Music Instruments & Accessories',
+      'Electronics E-Card'
+    ],
     gradient: 'from-indigo-600 to-blue-700',
     accentBg: 'bg-indigo-50',
     accentText: 'text-indigo-600',
-    description: 'Fast charging cables, power banks, wireless earbuds, and tech accessories.'
+    description: 'Trimmers & Hair Appliances, Earphones & Headsets, Speakers, Mobile & Computer, Decorative Lights, Chargers & Cables, Smart Watches, Kitchen Appliances, Laptop & Mobile Phones, Batteries, Extension Cables & Accessories, Home Appliances, Music Instruments & Accessories, Electronics E-Card.'
   },
   {
     id: 'stationery-games',
     name: 'Stationery & Games',
     icon: 'BookOpen',
-    image: 'https://images.unsplash.com/photo-1588072432836-e10032774350?auto=format&fit=crop&w=300&q=80',
+    image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=600&q=80',
     itemCount: 1540,
-    popularItems: ['Gel Pens', 'Notebooks', 'Board Games', 'Playing Cards'],
+    popularItems: [
+      'Notebooks & Diaries',
+      'Pens & Pencils',
+      'Toys & Games',
+      'Glue & Tape',
+      'Books & Magazines',
+      'Bags & School Needs',
+      'Children\'s Books',
+      'Arts & Crafts',
+      'Files & Office Needs',
+      'Gift Wraps & Bags',
+      'Sports & Gym',
+      'Shoe Polish & Brush'
+    ],
+    subcategories: [
+      'Notebooks & Diaries',
+      'Pens & Pencils',
+      'Toys & Games',
+      'Glue & Tape',
+      'Books & Magazines',
+      'Bags & School Needs',
+      'Children\'s Books',
+      'Arts & Crafts',
+      'Files & Office Needs',
+      'Gift Wraps & Bags',
+      'Sports & Gym',
+      'Shoe Polish & Brush'
+    ],
     gradient: 'from-amber-500 to-rose-500',
     accentBg: 'bg-amber-50',
     accentText: 'text-amber-600',
-    description: 'School stationery, gel pens, spiral notebooks, and fun board games.'
+    description: 'Notebooks & Diaries, Pens & Pencils, Toys & Games, Glue & Tape, Books & Magazines, Bags & School Needs, Children\'s Books, Arts & Crafts, Files & Office Needs, Gift Wraps & Bags, Sports & Gym, Shoe Polish & Brush.'
   },
   {
     id: 'stores',
     name: 'Stores',
     icon: 'ShoppingBag',
-    image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=300&q=80',
+    image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=600&q=80',
     itemCount: 320,
-    popularItems: ['Local Supermarket', 'Organic Farm Stand', 'Dairy Depot', 'Bakery Store'],
+    popularItems: [
+      'Print Store',
+      'Rakhi Gifts'
+    ],
+    subcategories: [
+      'Print Store',
+      'Rakhi Gifts'
+    ],
     gradient: 'from-emerald-600 to-teal-700',
     accentBg: 'bg-emerald-50',
     accentText: 'text-emerald-600',
-    description: 'Browse verified neighborhood stores and local merchant listings.'
+    description: 'Print Store, Rakhi Gifts.'
   },
   {
     id: 'e-cards',
     name: 'E-Cards',
     icon: 'Gift',
-    image: 'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=300&q=80',
+    image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=600&q=80',
     itemCount: 450,
-    popularItems: ['Gift Voucher ₹500', 'Shopping Card ₹1000', 'Birthday E-Card', 'Festival Voucher'],
+    popularItems: [
+      'E-Gift Cards'
+    ],
+    subcategories: [
+      'E-Gift Cards'
+    ],
     gradient: 'from-purple-500 to-pink-500',
     accentBg: 'bg-purple-50',
     accentText: 'text-purple-600',
-    description: 'Instant digital gift cards, shopping vouchers, and celebration e-cards.'
+    description: 'E-Gift Cards.'
   }
 ];
 
@@ -834,7 +1085,7 @@ export const DETAILED_SHOPS: DetailedShop[] = [
   {
     id: 'shop-1',
     name: 'Green Earth Organics',
-    image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1200&q=80',
+    image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=600&q=80',
     coverImage: 'https://images.unsplash.com/photo-1578916171728-46686eac8d58?auto=format&fit=crop&w=1600&q=80',
     distance: '0.5 km',
     latitude: 37.7749,
@@ -896,7 +1147,7 @@ export const DETAILED_SHOPS: DetailedShop[] = [
   {
     id: 'shop-2',
     name: 'Sunshine Fruit Depot',
-    image: 'https://images.unsplash.com/photo-1610832958506-aa56368176cf?auto=format&fit=crop&w=1200&q=80',
+    image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=600&q=80',
     coverImage: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1600&q=80',
     distance: '1.0 km',
     latitude: 37.7833,
@@ -936,7 +1187,7 @@ export const DETAILED_SHOPS: DetailedShop[] = [
   {
     id: 'shop-3',
     name: 'Artisan Bakery & Dairy',
-    image: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=1200&q=80',
+    image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=600&q=80',
     coverImage: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&w=1600&q=80',
     distance: '1.4 km',
     latitude: 37.7983,
@@ -976,7 +1227,7 @@ export const DETAILED_SHOPS: DetailedShop[] = [
   {
     id: 'shop-4',
     name: 'Metro Fresh Farmers Market',
-    image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1200&q=80',
+    image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=600&q=80',
     coverImage: 'https://images.unsplash.com/photo-1488459716781-31db52582fe9?auto=format&fit=crop&w=1600&q=80',
     distance: '2.2 km',
     latitude: 37.7690,
@@ -1016,7 +1267,7 @@ export const DETAILED_SHOPS: DetailedShop[] = [
   {
     id: 'shop-5',
     name: 'Pantry & Spice Corner',
-    image: 'https://images.unsplash.com/photo-1578916171728-46686eac8d58?auto=format&fit=crop&w=1200&q=80',
+    image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=600&q=80',
     coverImage: 'https://images.unsplash.com/photo-1610832958506-aa56368176cf?auto=format&fit=crop&w=1600&q=80',
     distance: '3.1 km',
     latitude: 37.7580,
@@ -1055,7 +1306,7 @@ export const DETAILED_SHOPS: DetailedShop[] = [
   {
     id: 'shop-6',
     name: 'Highland Organic Dairy & Pantry',
-    image: 'https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?auto=format&fit=crop&w=1200&q=80',
+    image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=600&q=80',
     coverImage: 'https://images.unsplash.com/photo-1563636619-e9143da7973b?auto=format&fit=crop&w=1600&q=80',
     distance: '3.8 km',
     latitude: 37.7450,
@@ -1094,7 +1345,7 @@ export const DETAILED_SHOPS: DetailedShop[] = [
   {
     id: 'shop-7',
     name: 'Urban Glow Beauty & Cosmetics',
-    image: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&w=1200&q=80',
+    image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=600&q=80',
     coverImage: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=1600&q=80',
     distance: '1.8 km',
     latitude: 37.7850,
@@ -1133,7 +1384,7 @@ export const DETAILED_SHOPS: DetailedShop[] = [
   {
     id: 'shop-8',
     name: 'Paws & Whiskers Pet Superstore',
-    image: 'https://images.unsplash.com/photo-1589924691995-400dc9ecc119?auto=format&fit=crop&w=1200&q=80',
+    image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=600&q=80',
     coverImage: 'https://images.unsplash.com/photo-1548767797-d8c844163c4c?auto=format&fit=crop&w=1600&q=80',
     distance: '2.5 km',
     latitude: 37.7710,
@@ -1172,7 +1423,7 @@ export const DETAILED_SHOPS: DetailedShop[] = [
   {
     id: 'shop-9',
     name: 'Apex Hardware & Electrical Supplies',
-    image: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=1200&q=80',
+    image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=600&q=80',
     coverImage: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=1600&q=80',
     distance: '3.0 km',
     latitude: 37.7620,
@@ -1210,7 +1461,7 @@ export const DETAILED_SHOPS: DetailedShop[] = [
   {
     id: 'shop-10',
     name: 'Green Thumb Plant Nursery & Garden',
-    image: 'https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?auto=format&fit=crop&w=1200&q=80',
+    image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=600&q=80',
     coverImage: 'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&fit=crop&w=1600&q=80',
     distance: '3.4 km',
     latitude: 37.7550,
@@ -1248,7 +1499,7 @@ export const DETAILED_SHOPS: DetailedShop[] = [
   {
     id: 'shop-11',
     name: 'SmartTech Electronics Hub',
-    image: 'https://images.unsplash.com/photo-1550009158-9ebf69173e03?auto=format&fit=crop&w=1200&q=80',
+    image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=600&q=80',
     coverImage: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=1600&q=80',
     distance: '3.9 km',
     latitude: 37.7480,
@@ -1286,7 +1537,7 @@ export const DETAILED_SHOPS: DetailedShop[] = [
   {
     id: 'shop-12',
     name: 'Kiddo & Toy Kingdom',
-    image: 'https://images.unsplash.com/photo-1588072432836-e10032774350?auto=format&fit=crop&w=1200&q=80',
+    image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=600&q=80',
     coverImage: 'https://images.unsplash.com/photo-1566576721346-d4a3b4eaeb55?auto=format&fit=crop&w=1600&q=80',
     distance: '4.2 km',
     latitude: 37.7400,
@@ -1324,7 +1575,7 @@ export const DETAILED_SHOPS: DetailedShop[] = [
   {
     id: 'shop-13',
     name: 'Pooja Divine Essentials',
-    image: 'https://images.unsplash.com/photo-1609234656388-0ff363383899?auto=format&fit=crop&w=1200&q=80',
+    image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=600&q=80',
     coverImage: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1600&q=80',
     distance: '1.2 km',
     latitude: 37.7800,
@@ -1362,7 +1613,7 @@ export const DETAILED_SHOPS: DetailedShop[] = [
   {
     id: 'shop-14',
     name: 'Velvet & Stitch Sewing Crafts',
-    image: 'https://images.unsplash.com/photo-1528458876861-544fd1761a91?auto=format&fit=crop&w=1200&q=80',
+    image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=600&q=80',
     coverImage: 'https://images.unsplash.com/photo-1583485088034-697b5bc54ccd?auto=format&fit=crop&w=1600&q=80',
     distance: '2.8 km',
     latitude: 37.7650,
@@ -1400,7 +1651,7 @@ export const DETAILED_SHOPS: DetailedShop[] = [
   {
     id: 'shop-15',
     name: 'Traveler’s Hub & Backpacks',
-    image: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=1200&q=80',
+    image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=600&q=80',
     coverImage: 'https://images.unsplash.com/photo-1503220317375-aaad61436b1b?auto=format&fit=crop&w=1600&q=80',
     distance: '3.6 km',
     latitude: 37.7500,
@@ -1438,7 +1689,7 @@ export const DETAILED_SHOPS: DetailedShop[] = [
   {
     id: 'shop-16',
     name: 'Sole Care Footwear Clinic',
-    image: 'https://images.unsplash.com/photo-1549298916-b41d501d3772?auto=format&fit=crop&w=1200&q=80',
+    image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=600&q=80',
     coverImage: 'https://images.unsplash.com/photo-1512374382149-233c42b6a83b?auto=format&fit=crop&w=1600&q=80',
     distance: '4.0 km',
     latitude: 37.7420,

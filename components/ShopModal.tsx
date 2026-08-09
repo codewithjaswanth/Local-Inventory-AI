@@ -116,7 +116,33 @@ export const ShopModal: React.FC<ShopModalProps> = ({ shop, onClose }) => {
                 </div>
               </div>
 
-              {/* Address */}
+              {/* Interactive Embedded Map Directions */}
+              <div className="rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-900 p-1">
+                <div className="p-3 bg-white dark:bg-slate-800/80 rounded-xl flex items-center justify-between flex-wrap gap-2 text-xs">
+                  <div className="flex items-center space-x-2 font-medium text-slate-700 dark:text-slate-200">
+                    <MapPin className="w-4 h-4 text-emerald-500 shrink-0" />
+                    <span className="truncate max-w-[280px] sm:max-w-md">{shop.address}</span>
+                  </div>
+                  <div className="flex items-center space-x-3 text-slate-500 dark:text-slate-400 font-mono text-[11px]">
+                    <span>🚗 5-8 mins</span>
+                    <span>🛵 3-5 mins</span>
+                    <span>🚶 12-15 mins</span>
+                  </div>
+                </div>
+                <div className="relative w-full h-44 rounded-xl overflow-hidden mt-1">
+                  <iframe
+                    title={`Map view for ${shop.name}`}
+                    width="100%"
+                    height="100%"
+                    style={{ border: 0, filter: 'contrast(1.05)' }}
+                    loading="lazy"
+                    allowFullScreen
+                    src={`https://maps.google.com/maps?q=${encodeURIComponent(shop.name + ' ' + shop.address)}&t=&z=15&ie=UTF8&iwloc=&output=embed`}
+                  />
+                </div>
+              </div>
+
+              {/* Address & Contact */}
               <div className="flex items-center justify-between text-xs sm:text-sm text-slate-600 dark:text-slate-400 border-b border-slate-200 dark:border-slate-800 pb-4">
                 <span className="flex items-center">
                   <MapPin className="w-4 h-4 text-slate-400 mr-1.5 flex-shrink-0" />
@@ -195,12 +221,12 @@ export const ShopModal: React.FC<ShopModalProps> = ({ shop, onClose }) => {
               <button
                 type="button"
                 onClick={() => {
-                  window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(shop.name + ' ' + shop.address)}`, '_blank');
+                  window.open(`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(shop.name + ' ' + shop.address)}`, '_blank');
                 }}
                 className="px-6 py-2.5 rounded-xl font-semibold bg-emerald-500 hover:bg-emerald-600 text-white shadow-lg shadow-emerald-500/25 text-sm transition-all duration-200 flex items-center space-x-2"
               >
                 <MapPin className="w-4 h-4" />
-                <span>Get Directions</span>
+                <span>Open Turn-by-Turn Directions</span>
               </button>
             </div>
           </motion.div>

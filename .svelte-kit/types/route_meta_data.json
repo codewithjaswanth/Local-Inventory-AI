@@ -1,0 +1,10 @@
+{
+	"/": [],
+	"/admin": [],
+	"/categories/[id]": [],
+	"/checkout": [],
+	"/login": [],
+	"/orders": [],
+	"/product/[id]": [],
+	"/shopkeeper": []
+}

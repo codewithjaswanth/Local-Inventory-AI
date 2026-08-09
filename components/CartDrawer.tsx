@@ -61,7 +61,7 @@ export const CartDrawer: React.FC = () => {
             initial={{ x: '100%' }}
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
-            transition={{ type: 'spring', damping: 25, stiffness: 220 }}
+            transition={{ ease: [0.16, 1, 0.3, 1], duration: 0.28 }}
             className="fixed top-0 right-0 bottom-0 z-[99999] w-full max-w-md bg-white dark:bg-[#091122] text-slate-900 dark:text-slate-100 shadow-2xl border-l border-slate-200 dark:border-slate-800 flex flex-col justify-between overflow-hidden select-none"
             role="dialog"
             aria-modal="true"
